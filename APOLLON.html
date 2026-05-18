@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>APOLLON — REFUdrive Sales Intelligence</title>
+<title>APOLLON v5 — REFUdrive</title>
 <style>
 /* ═══ RESET & BASE ═══ */
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -308,7 +308,7 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
 
 <!-- TOPBAR -->
 <div class="tb">
-  <div class="brand">APOLL<em>ON</em></div>
+  <div class="brand">APOLL<em>ON</em></div><span style="font-size:9px;color:var(--dim);border:1px solid var(--b);padding:1px 5px;border-radius:3px;margin-left:4px;">v5</span>
   <div class="tabs">
     <button class="tab tab-home on" onclick="G('home')"><span class="tab-ico">⌂</span>HOME</button>
     <button class="tab tab-input" onclick="G('input')"><span class="tab-ico">↑</span>INPUT</button>
@@ -1677,8 +1677,15 @@ document.addEventListener('DOMContentLoaded',function(){
   try{tasks=ld(ST);}catch(e){tasks=[];}
   try{const kd=ld(KS);if(kd&&kd.length)kalEvents=kd;}catch(e){kalEvents=[];}
   try{const dd=ld(DS);if(dd&&dd.length)docs=dd;}catch(e){docs=[];}
-  if(!accounts.length){try{seed();sd(SK,accounts);}catch(e){console.error('Seed:',e);}}
-  renderAll();
+  if(!accounts.length){
+    try{
+      seed();
+      try{sd(SK,accounts);}catch(e2){console.warn('Save failed:',e2);}
+    }catch(e){console.error('Seed error:',e);}
+  }
+  try{renderAll();}catch(e){console.error('renderAll:',e);}
+  try{RL();}catch(e){}
+  try{updInputSel();}catch(e){}
   document.getElementById('nl-dt').value=td();
   document.getElementById('home-date').textContent=new Date().toLocaleDateString('de-DE',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 });
