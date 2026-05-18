@@ -1249,6 +1249,7 @@ function renderHome(){
   if(elD)elD.innerHTML=docs.slice(0,4).map(d=>`<div class="hbr" onclick="G('docs')"><div class="hbd a"></div><span class="hbn">${esc(d.betreff||d.filename)}</span><span class="hbm">${d.accName||'Allgemein'}</span></div>`).join('')||'<div class="hnil">Keine Dokumente.</div>';
 }
 window.renderHome=renderHome;
+window.rTab=showRTab;
 
 // MAKE HELPER FUNCTION mkA available
 function mkA(company,cat,phase,prio,op,industry,product,notes,contacts,log,fudate,futext,volume,sop,nre){
