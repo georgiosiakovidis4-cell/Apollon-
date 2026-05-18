@@ -1628,7 +1628,36 @@ window.toP=toP;async function sendChat(){
 }
 
 window.sendChat=sendChat;window.phC=phC;window.setAccTab=setAccTab;
-window.setDocTab=setDocTab;window.createAcc=createAcc;
+window.setDocTab=setDocTab;function newAccModal(){
+  document.getElementById('nA-co').value='';
+  document.getElementById('nA-ind').value='';
+  document.getElementById('nA-country').value='DE';
+  document.getElementById('nA-prio').value='P2';
+  document.getElementById('mNew').classList.add('open');
+}
+
+function createAcc(){
+  const co=document.getElementById('nA-co').value.trim();
+  if(!co){alert('Firmenname fehlt.');return;}
+  const a=mkA(
+    co,
+    'New Opportunity',
+    'Signal erkannt',
+    document.getElementById('nA-prio').value,
+    'D',
+    document.getElementById('nA-ind').value,
+    '',
+    '',
+    [],[],'','','','',''
+  );
+  accounts.push(a);
+  sd(SK,accounts);
+  CM('mNew');
+  RL();
+  SA(a.id);
+}
+
+window.createAcc=createAcc;
 window.newAccModal=newAccModal;window.rTab=rTab;
 window.generateKompass=generateKompass;window.sendChat=sendChat;window.phC=phC;window.processInput=processInput;
 window.handleInpFiles=handleInpFiles;window.handleInpDrop=handleInpDrop;
