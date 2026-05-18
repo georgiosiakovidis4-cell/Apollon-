@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>APOLLON — REFUdrive</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0D1117;--panel:#161B22;--card:#1C2128;
+  --b:#30363D;--red:#E3000F;--w:#E6EDF3;
+  --sub:#8B949E;--dim:#484F58;
+  --amber:#F0A500;--green:#3FB950;--blue:#58A6FF;
+  --r:10px;
+}
+body{font-family:"Inter","Segoe UI",sans-serif;background:var(--bg);color:var(--w);height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:13px;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-thumb{background:#30363D;border-radius:2px;}
+
+/* TOPBAR */
+.tb{height:54px;display:flex;align-items:center;padding:0 20px;background:#010409;border-bottom:1px solid var(--b);gap:4px;flex-shrink:0;}
+.brand{font-size:15px;font-weight:800;letter-spacing:.08em;color:var(--w);margin-right:14px;}
+.brand em{color:var(--red);font-style:normal;}
+.nb{font-size:12px;font-weight:500;color:var(--sub);background:none;border:1px solid transparent;border-radius:7px;padding:5px 13px;cursor:pointer;transition:all .15s;}
+.nb:hover{color:var(--w);background:rgba(255,255,255,.05);}
+.nb.on{color:var(--red);border-color:rgba(227,0,15,.45);background:rgba(227,0,15,.08);font-weight:600;}
+.sp{flex:1;}
+.ak-w{display:flex;align-items:center;gap:8px;}
+.ak-l{font-size:10px;color:var(--dim);font-weight:600;letter-spacing:.08em;}
+.ak-i{width:200px;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:11px;padding:5px 10px;outline:none;border-radius:6px;}
+.ak-i:focus{border-color:rgba(227,0,15,.5);}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--dim);}
+.dot.ok{background:var(--green);}
+
+/* PAGES */
+.pg{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.pg.on{display:flex;}
+
+/* BUTTONS */
+.btn{background:none;border:1px solid var(--b);color:var(--sub);font-family:inherit;font-size:12px;font-weight:500;padding:6px 14px;cursor:pointer;transition:all .15s;border-radius:7px;}
+.btn:hover{border-color:rgba(227,0,15,.4);color:var(--w);}
+.btn.p{background:var(--red);border-color:var(--red);color:#fff;font-weight:600;}
+.btn.p:hover{background:#c0000d;}
+.btn.s{padding:4px 10px;font-size:11px;}
+
+/* INPUTS */
+.fi{width:100%;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:13px;padding:8px 12px;outline:none;border-radius:8px;}
+.fi:focus{border-color:rgba(227,0,15,.5);}
+.fi::placeholder{color:var(--dim);}
+.fsel{background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:12px;padding:6px 10px;outline:none;cursor:pointer;border-radius:7px;}
+.ta{width:100%;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:13px;padding:8px 12px;outline:none;resize:none;line-height:1.7;border-radius:8px;}
+.ta:focus{border-color:rgba(227,0,15,.4);}
+.ta::placeholder{color:var(--dim);}
+.lbl{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--sub);margin-bottom:4px;margin-top:10px;display:block;}
+.lbl:first-child{margin-top:0;}
+
+/* CHIPS */
+.chip{font-size:10px;font-weight:500;padding:3px 9px;border:1px solid var(--b);color:var(--sub);cursor:pointer;background:none;border-radius:6px;transition:all .15s;}
+.chip.on{color:var(--red);border-color:rgba(227,0,15,.5);background:rgba(227,0,15,.08);}
+.chips{display:flex;flex-wrap:wrap;gap:4px;}
+
+/* BADGES */
+.tP1{font-size:10px;font-weight:600;color:var(--red);border:1px solid rgba(227,0,15,.4);padding:2px 7px;border-radius:5px;}
+.tP2{font-size:10px;font-weight:600;color:var(--amber);border:1px solid rgba(240,165,0,.4);padding:2px 7px;border-radius:5px;}
+.tP3{font-size:10px;font-weight:600;color:var(--dim);border:1px solid var(--b);padding:2px 7px;border-radius:5px;}
+.oA{font-size:10px;font-weight:700;color:#fff;background:var(--red);padding:2px 7px;border-radius:5px;}
+.oB{font-size:10px;font-weight:600;color:var(--amber);border:1px solid rgba(240,165,0,.4);padding:2px 7px;border-radius:5px;}
+.oC{font-size:10px;font-weight:600;color:var(--blue);border:1px solid rgba(88,166,255,.4);padding:2px 7px;border-radius:5px;}
+.oD{font-size:10px;font-weight:600;color:var(--dim);border:1px solid var(--b);padding:2px 7px;border-radius:5px;}
+
+/* PHASE PILLS */
+.ph{font-size:9px;font-weight:600;padding:2px 6px;border:1px solid;border-radius:4px;}
+.ph-s{color:var(--dim);border-color:var(--b);}
+.ph-q{color:var(--amber);border-color:rgba(240,165,0,.35);}
+.ph-t,.ph-e{color:var(--blue);border-color:rgba(88,166,255,.35);}
+.ph-f{color:var(--amber);border-color:rgba(240,165,0,.6);}
+.ph-g{color:var(--green);border-color:rgba(63,185,80,.35);}
+.ph-l{color:var(--red);border-color:rgba(227,0,15,.3);}
+.ph-a,.ph-u{color:var(--dim);border-color:var(--b);}
+
+/* UTILS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sc{background:var(--card);border:1px solid var(--b);padding:14px;border-radius:var(--r);}
+.sc-t{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--red);border-bottom:1px solid var(--b);padding-bottom:5px;margin-bottom:10px;}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;}
+.empty-t{font-size:13px;font-weight:700;color:var(--dim);}
+.empty-s{font-size:11px;color:var(--dim);}
+.dots span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin:0 2px;animation:dp 1.2s infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}.dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dp{0%,80%,100%{opacity:.2;transform:scale(.7);}40%{opacity:1;transform:scale(1);}}
+.fud{font-size:10px;color:var(--dim);margin-left:auto;}
+.fud.od{color:var(--red);}
+
+/* HOME */
+#pg-home{overflow-y:auto;}
+.hw{max-width:1100px;margin:0 auto;padding:40px 36px;}
+.htag{font-size:10px;font-weight:600;letter-spacing:.18em;color:var(--sub);display:block;margin-bottom:16px;}
+.hh1{font-size:38px;font-weight:800;line-height:1.1;margin-bottom:10px;letter-spacing:-.02em;}
+.hh1 em{color:var(--red);font-style:normal;}
+.hsub{font-size:13px;color:var(--sub);margin-bottom:32px;}
+.krow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:28px;}
+.kc{background:var(--panel);border:1px solid var(--b);padding:20px;border-radius:var(--r);}
+.kv{font-size:32px;font-weight:800;line-height:1;margin-bottom:6px;}
+.kv.r{color:var(--red);}.kv.a{color:var(--amber);}.kv.g{color:var(--green);}.kv.w{color:var(--w);}
+.kl{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--dim);}
+.agrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.ac{background:var(--panel);border:1px solid var(--b);border-radius:14px;padding:26px;cursor:pointer;transition:all .2s;position:relative;}
+.ac:hover{border-color:rgba(227,0,15,.5);background:var(--card);}
+.ac-n{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--dim);margin-bottom:20px;}
+.ac-ico{width:48px;height:48px;border-radius:12px;background:rgba(227,0,15,.1);border:1px solid rgba(227,0,15,.2);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px;color:var(--red);}
+.ac-t{font-size:15px;font-weight:700;color:var(--w);margin-bottom:8px;}
+.ac-s{font-size:12px;color:var(--sub);line-height:1.7;margin-bottom:16px;}
+.ac-tag{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--dim);}
+.ac-arr{position:absolute;bottom:22px;right:22px;color:var(--red);opacity:0;transition:opacity .2s;}
+.ac:hover .ac-arr{opacity:1;}
+.hbot{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.hbs{background:var(--panel);border:1px solid var(--b);border-radius:var(--r);padding:18px 20px;}
+.hbs-t{font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--red);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+.hbr{padding:8px 0;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;display:flex;align-items:center;gap:10px;}
+.hbr:last-child{border:none;padding-bottom:0;}
+.hbr:hover .hbn{color:var(--red);}
+.hbd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.hbd.r{background:var(--red);}.hbd.a{background:var(--amber);}.hbd.g{background:var(--green);}
+.hbn{font-size:12px;font-weight:600;color:var(--w);flex:1;transition:color .1s;}
+.hbm{font-size:11px;color:var(--sub);}
+.hbm.od{color:var(--red);}
+.hnil{font-size:11px;color:var(--dim);padding:6px 0;}
+
+/* ACCOUNTS */
+#pg-accounts{flex-direction:row;}
+.al{width:240px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;}
+.ac2{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.ar{width:250px;flex-shrink:0;border-left:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;}
+.srch{margin:10px 12px 6px;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:12px;padding:7px 10px;outline:none;width:calc(100% - 24px);border-radius:8px;}
+.srch:focus{border-color:rgba(227,0,15,.4);}
+.srch::placeholder{color:var(--dim);}
+.fblk{padding:0 12px 10px;border-bottom:1px solid var(--b);}
+.fl{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--dim);margin-top:8px;margin-bottom:5px;display:block;}
+.alist{flex:1;overflow-y:auto;}
+.ai{padding:10px 12px;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;border-left:3px solid transparent;transition:all .1s;}
+.ai:hover{background:rgba(255,255,255,.02);}
+.ai.sel{border-left-color:var(--red);background:rgba(227,0,15,.05);}
+.ain{font-size:13px;font-weight:600;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ais{font-size:11px;color:var(--sub);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.air{display:flex;gap:4px;flex-wrap:wrap;align-items:center;}
+.afoot{padding:8px 12px;border-top:1px solid var(--b);display:flex;gap:6px;align-items:center;}
+.acnt{font-size:11px;color:var(--dim);flex:1;}
+
+/* ACCOUNT DETAIL */
+.dh{padding:18px 20px 14px;border-bottom:1px solid var(--b);background:var(--panel);flex-shrink:0;}
+.dco{font-size:20px;font-weight:800;margin-bottom:8px;}
+.dtiers{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+.dkv3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.dkv{background:var(--bg);border:1px solid var(--b);padding:10px 14px;border-radius:8px;}
+.dkv-l{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);margin-bottom:3px;}
+.dkv-v{font-size:12px;font-weight:600;}
+.dm{padding:12px 20px;border-bottom:1px solid var(--b);background:var(--card);flex-shrink:0;}
+.dm3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;}
+.mbox{padding:10px 14px;background:var(--panel);border:1px solid var(--b);border-radius:8px;}
+.mbox-t{font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);margin-bottom:4px;}
+.mbox-v{font-size:12px;color:var(--sub);line-height:1.5;}
+.wfb{padding:10px 14px;border-left:3px solid;border-radius:0 8px 8px 0;}
+.wfb.A{border-left-color:var(--red);background:rgba(227,0,15,.04);}
+.wfb.B{border-left-color:var(--amber);background:rgba(240,165,0,.04);}
+.wfb.C{border-left-color:var(--blue);background:rgba(88,166,255,.04);}
+.wfb.D{border-left-color:var(--dim);background:rgba(72,79,88,.04);}
+.wft{font-size:9px;font-weight:700;letter-spacing:.1em;margin-bottom:4px;}
+.wft.A{color:var(--red);}.wft.B{color:var(--amber);}.wft.C{color:var(--blue);}.wft.D{color:var(--dim);}
+.wfb-body{font-size:12px;line-height:1.65;color:var(--sub);}
+.dl{flex:1;overflow-y:auto;padding:12px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.full{grid-column:1/-1;}
+.ct-row{display:flex;align-items:baseline;gap:6px;padding:5px 0;border-bottom:1px solid rgba(48,54,61,.5);}
+.ct-row:last-child{border:none;}
+.ct-n{font-size:12px;font-weight:600;flex:1;}
+.ct-t{font-size:11px;color:var(--sub);}
+.ct-r{font-size:10px;font-weight:700;color:var(--red);}
+.log-item{display:flex;gap:6px;padding:5px 0;border-bottom:1px solid rgba(48,54,61,.5);}
+.log-item:last-child{border:none;}
+.ld{font-size:10px;color:var(--dim);width:70px;flex-shrink:0;}
+.lt{font-size:10px;font-weight:700;width:65px;flex-shrink:0;}
+.lt-ANRUF{color:var(--green);}.lt-MEETING{color:var(--amber);}.lt-EMAIL{color:var(--blue);}
+.lt-NOTE{color:var(--dim);}.lt-SIGNAL{color:var(--red);}
+.lt-RFI,.lt-RFQ,.lt-ANGEBOT{color:#BC8CFF;}
+.lb{font-size:12px;line-height:1.6;color:var(--sub);flex:1;}
+
+/* RIGHT PANEL */
+.rtabs{display:flex;border-bottom:1px solid var(--b);flex-shrink:0;}
+.rtab{flex:1;font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--dim);background:none;border:none;border-bottom:2px solid transparent;padding:8px 0;cursor:pointer;text-align:center;}
+.rtab.on{color:var(--red);border-bottom-color:var(--red);}
+.r-sec{padding:10px 12px;border-bottom:1px solid var(--b);}
+.r-sec-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:8px;}
+.fu-card{padding:9px 12px;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;}
+.fu-card:hover{background:rgba(255,255,255,.02);}
+.fu-co{font-size:12px;font-weight:600;margin-bottom:2px;}
+.fu-info{font-size:11px;color:var(--sub);display:flex;gap:6px;}
+.fu-date.od{color:var(--red);}
+
+/* PENTAGON */
+#pg-pentagon{flex-direction:row;}
+.pl{width:180px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;padding:14px 0;}
+.pls{margin-bottom:14px;}
+.pls-l{font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--dim);padding:0 14px;margin-bottom:5px;}
+.pcmd{display:block;width:100%;text-align:left;background:none;border:none;border-left:3px solid transparent;color:var(--sub);font-family:inherit;font-size:12px;padding:7px 14px;cursor:pointer;transition:all .1s;}
+.pcmd:hover{color:var(--w);}
+.pcmd.on{color:var(--w);border-left-color:var(--red);background:rgba(227,0,15,.06);font-weight:600;}
+.pcmd .sub{display:block;font-size:10px;font-weight:400;color:var(--dim);margin-top:2px;}
+.pex{margin-top:auto;padding:10px 14px;border-top:1px solid var(--b);}
+.pex-r{font-size:11px;color:var(--sub);margin-bottom:3px;}
+.pex-r em{color:var(--red);font-style:normal;}
+.pc{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.chat-area{flex:1;overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px;}
+.cwel{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;opacity:.2;}
+.cwt{font-size:26px;font-weight:800;letter-spacing:.08em;}
+.cwt em{color:var(--red);font-style:normal;}
+.cws{font-size:10px;letter-spacing:.16em;color:var(--dim);}
+.msg{max-width:840px;width:100%;}
+.msg-user{align-self:flex-end;}
+.msg-lbl{font-size:10px;font-weight:600;letter-spacing:.08em;margin-bottom:4px;color:var(--dim);}
+.msg-user .msg-lbl{text-align:right;color:var(--red);}
+.msg-user .msg-body{background:var(--card);border:1px solid var(--b);border-right:3px solid var(--red);padding:10px 14px;font-size:13px;line-height:1.65;white-space:pre-wrap;border-radius:10px 2px 10px 10px;}
+.msg-ai .msg-body{font-size:13px;line-height:1.85;color:#C0C8D2;}
+.sec-h{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-top:14px;margin-bottom:5px;border-bottom:1px solid rgba(227,0,15,.2);padding-bottom:3px;}
+.sec-b{font-size:13px;line-height:1.85;color:#C0C8D2;white-space:pre-wrap;margin-bottom:6px;}
+.action-blk{background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:14px;margin-top:4px;border-radius:0 10px 10px 0;}
+.action-blk-t{font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:5px;}
+.action-blk-b{font-size:14px;line-height:1.75;color:var(--w);white-space:pre-wrap;font-weight:500;}
+.cia{border-top:1px solid var(--b);padding:12px 26px;background:var(--panel);}
+.ci-row{display:flex;gap:8px;align-items:flex-end;}
+.cmd-badge{font-size:11px;font-weight:700;color:var(--red);background:rgba(227,0,15,.08);border:1px solid rgba(227,0,15,.35);padding:4px 10px;white-space:nowrap;display:none;border-radius:6px;}
+.cmd-badge.show{display:block;}
+.chat-ta{flex:1;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:13px;padding:9px 14px;outline:none;resize:none;min-height:42px;max-height:120px;line-height:1.55;border-radius:10px;}
+.chat-ta:focus{border-color:rgba(227,0,15,.4);}
+.chat-ta::placeholder{color:var(--dim);}
+.send-btn{background:var(--red);border:none;color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:9px 20px;cursor:pointer;height:42px;border-radius:10px;transition:background .15s;}
+.send-btn:hover{background:#c0000d;}
+.send-btn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* INPUT */
+#pg-input{flex-direction:column;}
+.inp-hdr{padding:16px 22px 12px;border-bottom:1px solid var(--b);background:var(--panel);flex-shrink:0;}
+.inp-hdr-t{font-size:18px;font-weight:800;margin-bottom:4px;}
+.inp-hdr-s{font-size:13px;color:var(--sub);}
+.inp-body{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;}
+.inp-l{display:flex;flex-direction:column;border-right:1px solid var(--b);overflow:hidden;}
+.inp-r{display:flex;flex-direction:column;overflow:hidden;}
+.inp-bar{padding:9px 14px;border-bottom:1px solid var(--b);display:flex;gap:6px;align-items:center;flex-shrink:0;background:var(--panel);}
+.inp-bar-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);}
+.inp-ta{flex:1;resize:none;border:none;padding:14px;font-size:13px;line-height:1.75;background:var(--bg);color:var(--w);font-family:inherit;outline:none;}
+.inp-ta::placeholder{color:var(--dim);}
+.inp-foot{padding:10px 14px;display:flex;gap:6px;background:var(--panel);flex-shrink:0;border-top:1px solid var(--b);}
+.inp-out{flex:1;overflow-y:auto;padding:14px 16px;}
+.inp-ts{font-size:10px;color:var(--dim);margin-left:auto;}
+.inp-drop{margin:10px 14px 0;border:2px dashed var(--b);padding:12px;text-align:center;cursor:pointer;flex-shrink:0;border-radius:8px;transition:border-color .2s;}
+.inp-drop:hover{border-color:rgba(227,0,15,.4);}
+
+/* RADAR */
+#pg-radar{flex-direction:row;}
+.rl{width:200px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;overflow:hidden;}
+.rlt{padding:10px 14px;border-bottom:1px solid var(--b);font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--red);}
+.rlist{flex:1;overflow-y:auto;}
+.rai{padding:8px 14px;border-bottom:1px solid rgba(48,54,61,.5);font-size:12px;color:var(--sub);cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rai:hover{color:var(--w);}
+.rmain{flex:1;display:flex;flex-direction:column;}
+.rfeed{flex:1;overflow-y:auto;padding:14px 18px;}
+.rc{background:var(--panel);border:1px solid var(--b);padding:14px;margin-bottom:12px;border-radius:var(--r);}
+.rc-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:8px;}
+.sig-card{background:var(--card);border:1px solid var(--b);border-left:3px solid;padding:10px 12px;margin-bottom:6px;border-radius:0 8px 8px 0;}
+.sig-card.MARKT{border-left-color:var(--red);}.sig-card.NETZWERK{border-left-color:var(--amber);}
+.sig-card.WEB{border-left-color:var(--blue);}.sig-card.MESSE{border-left-color:#BC8CFF;}
+.sig-card.ANRUF{border-left-color:var(--green);}.sig-card.INSTINKT{border-left-color:var(--dim);}
+.sig-h{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.sig-badge{font-size:9px;font-weight:700;padding:2px 6px;border:1px solid;border-radius:4px;}
+.sb-MARKT{color:var(--red);border-color:rgba(227,0,15,.4);}
+.sb-NETZWERK{color:var(--amber);border-color:rgba(240,165,0,.4);}
+.sb-WEB{color:var(--blue);border-color:rgba(88,166,255,.4);}
+.sb-MESSE{color:#BC8CFF;border-color:rgba(188,140,255,.4);}
+.sb-ANRUF{color:var(--green);border-color:rgba(63,185,80,.4);}
+.sb-INSTINKT{color:var(--dim);border-color:var(--b);}
+.sig-acc{font-size:12px;font-weight:700;}
+.sig-date{font-size:10px;color:var(--dim);margin-left:auto;}
+.sig-body{font-size:12px;line-height:1.65;color:var(--sub);}
+
+/* FRANZ */
+#pg-franz{flex-direction:row;}
+.flp{width:360px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;overflow-y:auto;}
+.frp{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.fsec{padding:12px 14px;border-bottom:1px solid var(--b);}
+.fsec-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:8px;}
+.fmodes{display:flex;flex-wrap:wrap;gap:4px;padding:8px 14px;border-bottom:1px solid var(--b);}
+.fout{flex:1;overflow-y:auto;padding:14px 16px;}
+.foh{padding:10px 16px;border-bottom:1px solid var(--b);background:var(--panel);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.foh-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--dim);}
+
+/* FRANZ OUTPUT */
+.osec{background:var(--card);border:1px solid var(--b);padding:10px;margin-bottom:6px;border-radius:8px;}
+.osec-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);border-bottom:1px solid var(--b);padding-bottom:3px;margin-bottom:6px;}
+.osec-b{font-size:12px;line-height:1.75;color:#C0C8D2;white-space:pre-wrap;}
+.splits{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;}
+.scard{background:var(--card);border:1px solid var(--b);border-left:3px solid;padding:8px 10px;border-radius:0 7px 7px 0;}
+.scard.crm{border-left-color:var(--blue);}.scard.fu{border-left-color:var(--amber);}
+.scard.radar{border-left-color:var(--red);}.scard.arch{border-left-color:var(--dim);}
+.slbl{font-size:8px;font-weight:700;letter-spacing:.1em;margin-bottom:3px;}
+.slbl.crm{color:var(--blue);}.slbl.fu{color:var(--amber);}
+.slbl.radar{color:var(--red);}.slbl.arch{color:var(--dim);}
+.sbody{font-size:10px;line-height:1.6;color:var(--sub);}
+.action-box{background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px;margin-bottom:6px;border-radius:0 8px 8px 0;}
+.abox-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:4px;}
+.abox-b{font-size:12px;line-height:1.75;color:#C0C8D2;white-space:pre-wrap;}
+
+/* TASKS */
+#pg-tasks{overflow-y:auto;}
+.task-wrap{padding:22px 28px;}
+.task-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.task-t{font-size:18px;font-weight:800;}
+.task-add{background:var(--panel);border:1px solid var(--b);padding:12px;margin-bottom:14px;display:flex;gap:5px;flex-wrap:wrap;border-radius:var(--r);}
+.tsec-t{font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--red);margin-bottom:7px;margin-top:14px;}
+.task-item{background:var(--panel);border:1px solid var(--b);padding:9px 12px;margin-bottom:4px;display:flex;align-items:center;gap:10px;border-left:3px solid;border-radius:0 9px 9px 0;}
+.task-item.high{border-left-color:var(--red);}.task-item.med{border-left-color:var(--amber);}.task-item.low{border-left-color:var(--dim);}
+.task-item.di{opacity:.35;}
+.tck{width:16px;height:16px;background:none;border:1px solid var(--b);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--green);border-radius:4px;}
+.tt{flex:1;font-size:12px;}
+.tt.done{text-decoration:line-through;color:var(--dim);}
+.tmeta{font-size:11px;color:var(--sub);display:flex;gap:7px;}
+.tdue.od{color:var(--red);}
+.tdel{background:none;border:none;color:var(--dim);cursor:pointer;font-size:13px;}
+.tdel:hover{color:var(--red);}
+
+/* KALENDER */
+#pg-kalender{flex-direction:row;}
+.kal-l{width:310px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;}
+.kal-hdr{padding:12px 14px;border-bottom:1px solid var(--b);}
+.kal-hdr-t{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:8px;}
+.kal-nav{display:flex;align-items:center;gap:6px;}
+.kal-mo{flex:1;text-align:center;font-size:12px;font-weight:700;}
+.kal-grid{padding:10px 14px;border-bottom:1px solid var(--b);}
+.kal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:10px;text-align:center;}
+.kal-day{padding:4px 2px;cursor:pointer;border-radius:4px;}
+.kal-day.today{background:var(--red);color:#fff;font-weight:700;}
+.kal-day.has-ev{color:var(--amber);font-weight:700;}
+.kal-list{flex:1;overflow-y:auto;}
+.kev-i{padding:8px 12px;border-bottom:1px solid rgba(48,54,61,.5);border-left:3px solid var(--amber);cursor:pointer;}
+.kev-i:hover{background:rgba(255,255,255,.02);}
+.kev-n{font-size:12px;font-weight:700;margin-bottom:2px;}
+.kev-m{font-size:10px;color:var(--sub);}
+.kal-r{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.kal-r-hdr{padding:12px 16px;border-bottom:1px solid var(--b);background:var(--panel);font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);}
+.kal-form{padding:14px 16px;flex:1;overflow-y:auto;}
+
+/* KNOWLEDGE / PORTFOLIO */
+#pg-knowledge{flex-direction:row;}
+.kbnav{width:210px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;overflow:hidden;}
+.kbsrch{margin:10px 12px;background:#010409;border:1px solid var(--b);color:var(--w);font-family:inherit;font-size:12px;padding:6px 10px;outline:none;width:calc(100% - 24px);border-radius:7px;}
+.kbsrch:focus{border-color:rgba(227,0,15,.4);}
+.kbsrch::placeholder{color:var(--dim);}
+.kbcats{flex:1;overflow-y:auto;}
+.kbcat{padding:9px 13px;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px;}
+.kbcat:hover{color:var(--w);}
+.kbcat.on{border-left:3px solid var(--red);background:rgba(227,0,15,.05);color:var(--w);}
+.kbcnt{font-size:10px;color:var(--dim);margin-left:auto;border:1px solid var(--b);padding:1px 5px;border-radius:4px;}
+.kbmain{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.kbfeed{flex:1;overflow-y:auto;padding:14px 18px;}
+.kbi{background:var(--panel);border:1px solid var(--b);padding:12px;margin-bottom:7px;cursor:pointer;border-radius:var(--r);}
+.kbi:hover{border-color:rgba(227,0,15,.3);}
+.kbit{font-size:13px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;}
+.kbarr{font-size:11px;color:var(--dim);margin-left:auto;transition:transform .15s;}
+.kbopen .kbarr{transform:rotate(90deg);}
+.kbis{font-size:11px;color:var(--sub);}
+.kbdet{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--b);}
+.kbopen .kbdet{display:block;}
+.kbf{display:flex;gap:6px;margin-bottom:5px;}
+.kbfl{font-size:10px;font-weight:700;color:var(--dim);width:85px;flex-shrink:0;}
+.kbfv{font-size:12px;color:#C0C8D2;flex:1;line-height:1.65;}
+
+/* PORTFOLIO */
+#pg-portfolio{flex-direction:column;overflow:hidden;}
+.port-hdr{padding:12px 20px;border-bottom:1px solid var(--b);background:var(--panel);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.port-t{font-size:13px;font-weight:700;}
+.bc{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--sub);}
+.bc-i{cursor:pointer;}
+.bc-i.on{color:var(--w);font-weight:700;}
+.port-body{flex:1;overflow:hidden;display:flex;}
+.port-nav{width:210px;flex-shrink:0;border-right:1px solid var(--b);overflow-y:auto;background:var(--panel);}
+.pcat{padding:9px 13px;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;font-size:12px;color:var(--sub);}
+.pcat:hover{color:var(--w);}
+.pcat.on{border-left:3px solid var(--red);background:rgba(227,0,15,.05);color:var(--w);}
+.port-det{flex:1;overflow-y:auto;padding:18px 22px;}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.prod-card{background:var(--panel);border:1px solid var(--b);padding:14px;cursor:pointer;border-radius:var(--r);}
+.prod-card:hover{border-color:rgba(227,0,15,.4);}
+.prod-name{font-size:14px;font-weight:700;margin-bottom:3px;}
+.prod-sub{font-size:11px;color:var(--sub);margin-bottom:8px;}
+.prod-specs{font-size:11px;line-height:1.75;color:var(--sub);}
+
+/* DOCS */
+#pg-docs{flex-direction:column;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(1,4,9,.92);z-index:500;align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--red);width:500px;max-height:88vh;overflow-y:auto;padding:22px;border-radius:var(--r);}
+.modal-t{font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--red);margin-bottom:14px;}
+.modal-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:14px;}
+
+/* Legacy aliases */
+.topbar{height:54px;display:flex;align-items:center;padding:0 20px;background:#010409;border-bottom:1px solid var(--b);gap:4px;flex-shrink:0;}
+nav.nav{display:flex;gap:4px;}
+
+/* HOME page class aliases - old HTML uses these */
+.hpw{max-width:1100px;margin:0 auto;padding:40px 36px;}
+.hp-hero{padding-bottom:24px;}
+.hp-tag{font-size:10px;font-weight:600;letter-spacing:.18em;color:var(--sub);display:block;margin-bottom:16px;}
+.hp-h1{font-size:36px;font-weight:800;line-height:1.1;margin-bottom:10px;letter-spacing:-.02em;}
+.hp-h1 em{color:var(--red);font-style:normal;}
+.hp-sub{font-size:13px;color:var(--sub);margin-bottom:32px;}
+.hp-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:24px 0;}
+.hkpi{background:var(--panel);border:1px solid var(--b);padding:20px;border-radius:var(--r);}
+.hkpi-v{font-size:32px;font-weight:800;line-height:1;margin-bottom:6px;}
+.hkpi-v.r{color:var(--red);}.hkpi-v.a{color:var(--amber);}.hkpi-v.g{color:var(--green);}.hkpi-v.w{color:var(--w);}
+.hkpi-l{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--dim);}
+.hp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+.hac{background:var(--panel);border:1px solid var(--b);border-radius:14px;padding:26px;cursor:pointer;transition:all .2s;position:relative;}
+.hac:hover{border-color:rgba(227,0,15,.5);background:var(--card);}
+.hac-n{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--dim);margin-bottom:20px;}
+.hac-ico{width:48px;height:48px;border-radius:12px;background:rgba(227,0,15,.1);border:1px solid rgba(227,0,15,.2);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px;color:var(--red);}
+.hac-t{font-size:15px;font-weight:700;color:var(--w);margin-bottom:8px;}
+.hac-s{font-size:12px;color:var(--sub);line-height:1.7;margin-bottom:16px;}
+.hac-tag{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--dim);}
+.hac-arr{position:absolute;bottom:22px;right:22px;color:var(--red);opacity:0;transition:opacity .2s;}
+.hac:hover .hac-arr{opacity:1;}
+.hp-bot{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.hbs{background:var(--panel);border:1px solid var(--b);border-radius:var(--r);padding:18px 20px;}
+.hbs-t{font-size:9px;font-weight:700;letter-spacing:.16em;color:var(--red);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+.hbr{padding:8px 0;border-bottom:1px solid rgba(48,54,61,.5);cursor:pointer;display:flex;align-items:center;gap:10px;}
+.hbr:last-child{border:none;padding-bottom:0;}
+.hbr:hover .hbn{color:var(--red);}
+.hbd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.hbd.r{background:var(--red);}.hbd.a{background:var(--amber);}.hbd.g{background:var(--green);}
+.hbn{font-size:12px;font-weight:600;color:var(--w);flex:1;transition:color .1s;}
+.hbm{font-size:11px;color:var(--sub);}
+.hbm.od{color:var(--red);}
+.hnil{font-size:11px;color:var(--dim);padding:6px 0;}
+
+/* PAGE BASE */
+.page{display:none;flex:1;overflow:hidden;flex-direction:column;}
+.page.on{display:flex;}
+#pg-home.on{overflow-y:auto;}
+#pg-tasks.on{overflow-y:auto;}
+
+/* ACCOUNTS layout fix */
+#pg-accounts{flex-direction:row;}
+.acc-l{width:240px;flex-shrink:0;border-right:1px solid var(--b);background:var(--panel);display:flex;flex-direction:column;}
+</style>
+</head>
+<body>
+</head>
+<body>
+<div class="tb">
+  <div class="brand">APOLL<em>ON</em></div>
+  <div class="vsep"></div>
+  <button class="nb on" onclick="G('home')">HOME</button>
+  <button class="nb" onclick="G('input')">INPUT</button>
+  <button class="nb" onclick="G('accounts')">ACCOUNTS</button>
+  <button class="nb" onclick="G('pentagon')">PENTAGON</button>
+  <button class="nb" onclick="G('radar')">RADAR</button>
+  <button class="nb" onclick="G('franz')">FRANZ</button>
+  <button class="nb" onclick="G('portfolio')">PORTFOLIO</button>
+  <button class="nb" onclick="G('knowledge')">KNOWLEDGE</button>
+  <button class="nb" onclick="G('tasks')">TASKS</button>
+  <button class="nb" onclick="G('kalender')">KALENDER</button>
+  <button class="nb" onclick="G('docs')">DOKUMENTE</button>
+  <div class="sp"></div>
+  <div class="ak-w">
+    <span class="ak-l">API KEY</span>
+    <input type="password" class="ak-i" id="apiKey" placeholder="sk-ant-..." oninput="localStorage.setItem('ap_key',this.value);document.getElementById('apidot').className='dot'+(this.value?' ok':'')" >
+    <div class="dot" id="apidot"></div>
+  </div>
+</div>
+  <div class="api-wrap">
+    <span class="albl">API KEY</span>
+    <input class="ainp" type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+    <div class="sdot" id="sdot"></div>
+  </div>
+  <button class="nb" onclick="resetData()" style="font-size:9px;color:var(--dim);border:1px solid var(--soft);padding:0 8px;height:28px;margin-left:4px;" title="Reset & Reload Data">&#8635;</button>
+</div>
+<div class="page on" id="pg-home">
+
+<div class="hpw">
+  <div class="hp-hero">
+    <div class="hp-tag">APOLLON &nbsp;·&nbsp; REFUDRIVE GmbH &nbsp;·&nbsp; SALES INTELLIGENCE</div>
+    <div class="hp-h1">Guten Morgen, <em>George.</em></div>
+    <div class="hp-sub" id="home-date"></div>
+  </div>
+  <!-- KPI STRIP -->
+  <div class="hp-kpis">
+    <div class="hkpi"><div class="hkpi-v r" id="kpi-opA">0</div><div class="hkpi-l">OPERATIV A</div></div>
+    <div class="hkpi"><div class="hkpi-v r" id="kpi-p1">0</div><div class="hkpi-l">P1 STRATEGISCH</div></div>
+    <div class="hkpi"><div class="hkpi-v a" id="kpi-od">0</div><div class="hkpi-l">&#220;BERF&#196;LLIG</div></div>
+    <div class="hkpi"><div class="hkpi-v w" id="kpi-total">0</div><div class="hkpi-l">ACCOUNTS</div></div>
+    <div class="hkpi"><div class="hkpi-v g" id="kpi-sig">0</div><div class="hkpi-l">SIGNALE</div></div>
+  </div>
+  <!-- ACTION GRID -->
+  <div class="hp-grid">
+    <div class="hac" onclick="G('input')">
+      <div class="hac-n">01 · EINGANG</div>
+      <div class="hac-ico">&#8679;</div>
+      <div class="hac-t">INPUT CENTER</div>
+      <div class="hac-s">Email, PDF, Word, Notizen — alles rein. APOLLON erkennt Account und Inhalt automatisch.</div>
+      <div class="hac-tag">EMAIL · PDF · WORD · EML</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+    <div class="hac" onclick="G('accounts')">
+      <div class="hac-n">02 · CRM</div>
+      <div class="hac-ico">&#9776;</div>
+      <div class="hac-t">ACCOUNTS &amp; PIPELINE</div>
+      <div class="hac-s">28 Accounts. P1/P2/P3 Priorit&#228;t. Kontakte, Kompass, History, Follow-ups pro Account.</div>
+      <div class="hac-tag">CRM · KOMPASS · PIPELINE</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+    <div class="hac" onclick="G('pentagon');SC('DEEP DIVE')">
+      <div class="hac-n">03 · ANALYSE</div>
+      <div class="hac-ico">&#9670;</div>
+      <div class="hac-t">PENTAGON</div>
+      <div class="hac-s">Deep Dive, Meeting-Vorbereitung, Strategie, CHRISI-Report. Vier Experten denken mit.</div>
+      <div class="hac-tag">DEEP DIVE · STRATEGIE · REPORT</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+    <div class="hac" onclick="G('docs')">
+      <div class="hac-n">04 · ARCHIV</div>
+      <div class="hac-ico">&#128196;</div>
+      <div class="hac-t">DOKUMENTE</div>
+      <div class="hac-s">PDF, Word, Excel hochladen. APOLLON liest, erkennt und legt pro Account ab.</div>
+      <div class="hac-tag">PDF · DATASHEET · ANGEBOTE</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+    <div class="hac" onclick="G('kalender')">
+      <div class="hac-n">05 · ZEIT</div>
+      <div class="hac-ico">&#128197;</div>
+      <div class="hac-t">KALENDER</div>
+      <div class="hac-s">Termine, Meetings, Follow-up Dates. Sennebogen Di 10:30 · Manitou 15. Juli.</div>
+      <div class="hac-tag">TERMINE · MEETINGS · ALERTS</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+    <div class="hac" onclick="G('radar')">
+      <div class="hac-n">06 · INTEL</div>
+      <div class="hac-ico">&#9685;</div>
+      <div class="hac-t">RADAR</div>
+      <div class="hac-s">Markt-Signale, Wettbewerb, Trends. Was passiert bei OEMs bevor du es weißt.</div>
+      <div class="hac-tag">MARKT · WETTBEWERB · TRENDS</div>
+      <div class="hac-arr">&#8594;</div>
+    </div>
+  </div>
+  <!-- BOTTOM INFO -->
+  <div class="hp-bot">
+    <div class="hbs">
+      <div class="hbs-t">SOFORT HANDELN — OPERATIV A</div>
+      <div id="h-opA"><div class="hb-nil">Wird geladen...</div></div>
+    </div>
+    <div class="hbs">
+      <div class="hbs-t">N&#196;CHSTE TERMINE</div>
+      <div id="h-tasks"><div class="hb-nil">Keine Termine.</div></div>
+    </div>
+    <div class="hbs">
+      <div class="hbs-t">&#220;BERF&#196;LLIGE FOLLOW-UPS</div>
+      <div id="h-od"><div class="hb-nil">Keine &#252;berf&#228;lligen Follow-ups.</div></div>
+    </div>
+    <div class="hbs">
+      <div class="hbs-t">LETZTE SIGNALE</div>
+      <div id="h-sigs"><div class="hb-nil">Noch keine Signale.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="page" id="pg-accounts">
+  <div class="acc-l">
+    <input class="srch" type="text" id="accSrch" placeholder="Suchen ..." oninput="RL()">
+    <div class="fblk">
+      <span class="fl">STRATEGISCH P1/P2/P3</span>
+      <div class="chips" id="prC">
+        <button class="chip on" data-v="ALL" onclick="SF('pr',this)">ALLE</button>
+        <button class="chip" data-v="P1" onclick="SF('pr',this)">P1</button>
+        <button class="chip" data-v="P2" onclick="SF('pr',this)">P2</button>
+        <button class="chip" data-v="P3" onclick="SF('pr',this)">P3</button>
+      </div>
+      <span class="fl">OPERATIV A/B/C/D</span>
+      <div class="chips" id="opC">
+        <button class="chip on" data-v="ALL" onclick="SF('op',this)">ALLE</button>
+        <button class="chip" data-v="A" onclick="SF('op',this)">A &#8212; Aktiv</button>
+        <button class="chip" data-v="B" onclick="SF('op',this)">B &#8212; Pflege</button>
+        <button class="chip" data-v="C" onclick="SF('op',this)">C &#8212; Halten</button>
+        <button class="chip" data-v="D" onclick="SF('op',this)">D &#8212; Radar</button>
+      </div>
+      <span class="fl">PHASE</span>
+      <div class="chips" id="phC">
+        <button class="chip on" data-v="ALL" onclick="SF('ph',this)">ALLE</button>
+        <button class="chip" data-v="Signal erkannt" onclick="SF('ph',this)">Signal</button>
+        <button class="chip" data-v="qualifiziert" onclick="SF('ph',this)">Quali</button>
+        <button class="chip" data-v="Entscheider identifiziert" onclick="SF('ph',this)">Entsch.</button>
+        <button class="chip" data-v="Angebot / Strategie aktiv" onclick="SF('ph',this)">Angebot</button>
+        <button class="chip" data-v="Follow-up / Verhandlung" onclick="SF('ph',this)">Verh.</button>
+        <button class="chip" data-v="gewonnen" onclick="SF('ph',this)">Won</button>
+      </div>
+    </div>
+    <div class="acc-list" id="accList"></div>
+    <div class="acc-foot">
+      <span class="acc-cnt" id="accCnt">0</span>
+      <button class="btn s" onclick="OM('mImp')">&#8593; CSV</button>
+      <button class="btn s p" onclick="OM('mNew')">+ NEU</button>
+    </div>
+  </div>
+  <div class="acc-c">
+    <div id="detE" class="empty"><div class="empty-t">ACCOUNT W&#196;HLEN</div><div class="empty-s">oder neuen anlegen</div></div>
+    <div id="detC" style="display:none;flex:1;flex-direction:column;overflow:hidden;">
+      <div class="det-hdr">
+        <div class="det-co" id="d-co"></div>
+        <div class="det-tiers" id="d-tiers-row"></div>
+        <div class="det-kv3">
+          <div class="dkv"><div class="dkv-l">UMSATZHEBEL</div><div class="dkv-v" id="d-vol-d">&#8212;</div></div>
+          <div class="dkv"><div class="dkv-l">STATUS</div><div class="dkv-v" id="d-stat-d">&#8212;</div></div>
+          <div class="dkv"><div class="dkv-l">N&#196;CHSTER SCHRITT</div><div class="dkv-v" id="d-next-d">&#8212;</div></div>
+        </div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;">
+          <select class="fsel" id="d-phase" onchange="SV('phase',this.value);RL()">
+            <option>Signal erkannt</option><option>qualifiziert</option><option>technisch geprueft</option>
+            <option>Entscheider identifiziert</option><option>Angebot / Strategie aktiv</option>
+            <option>Follow-up / Verhandlung</option><option>gewonnen</option><option>verloren</option>
+          </select>
+          <select class="fsel" id="d-prio" onchange="SV('prio',this.value);RL();updBd()" title="Strategische Prioritat P1/P2/P3"><option>P1</option><option>P2</option><option>P3</option><option>&#8212;</option></select>
+          <select class="fsel" id="d-op" onchange="SV('op',this.value);RL();updBd();renderWF()" title="Operative Intensitat A/B/C/D"><option value="A">A &#8212; Aktiv</option><option value="B">B &#8212; Pflege</option><option value="C">C &#8212; Halten</option><option value="D">D &#8212; Radar</option></select>
+          <select class="fsel" id="d-cat" onchange="SV('cat',this.value)"><option>Sales aktiv</option><option>ePTO Ansatz</option><option>New Opportunities</option><option>Pipeline Target</option></select>
+          <button class="btn s" onclick="toP()">&#8594; PENTAGON</button>
+          <button class="btn s" onclick="DA()">L&#214;SCHEN</button>
+        </div>
+      </div>
+      <div class="det-mid">
+        <div class="mid3">
+          <div class="mbox"><div class="mbox-t">LETZTER KONTAKT</div><div class="mbox-v" id="d-lc">&#8212;</div></div>
+          <div class="mbox"><div class="mbox-t">FIT</div><div class="mbox-v" id="d-fit">&#8212;</div></div>
+          <div class="mbox"><div class="mbox-t">RISIKO</div><div class="mbox-v" id="d-risk">&#8212;</div></div>
+        </div>
+        <div class="wf-banner A" id="wf-b">
+          <div class="wf-t A" id="wf-t">WORKFLOW A &#8212; AKTIV JETZT</div>
+          <div class="wf-body" id="wf-body"></div>
+        </div>
+      </div>
+      <div class="det-lower">
+        <div class="sc"><div class="sc-t">KONTAKTE</div><div id="d-cts"></div>
+          <div class="add-row"><input class="fi" id="nc-n" placeholder="Name" style="flex:1"><input class="fi" id="nc-t" placeholder="Funktion" style="flex:1.2"><select class="fsel" id="nc-r"><option>Entscheider</option><option>Beeinflusser</option><option>Einkauf</option><option>Engineering</option><option>Blocker</option></select><button class="add-btn" onclick="ACt()">+</button></div>
+        </div>
+        <div class="sc"><div class="sc-t">OPPORTUNITY</div>
+          <label class="lbl">PRODUKT</label><input class="fi" id="d-prod" placeholder="OBC22K-850 ..." oninput="SV('product',this.value)">
+          <label class="lbl">VOLUMEN</label><input class="fi" id="d-vol" placeholder="200 Stuck, EUR 797k" oninput="SV('volume',this.value);updDs()">
+          <div class="g2" style="margin-top:7px;"><div><label class="lbl">SOP</label><input class="fi" type="date" id="d-sop" oninput="SV('sop',this.value)"></div><div><label class="lbl">NRE</label><input class="fi" id="d-nre" placeholder="Budget ..." oninput="SV('nre',this.value)"></div></div>
+        </div>
+        <div class="sc full"><div class="sc-t">KOMMUNIKATION &amp; HISTORIE</div><div id="d-log"></div>
+          <div class="add-row"><select class="fsel" id="nl-tp"><option>ANRUF</option><option>MEETING</option><option>EMAIL</option><option>ANGEBOT</option><option>RFI</option><option>RFQ</option><option>SIGNAL</option><option>NOTE</option></select><input type="date" class="fsel" id="nl-dt"><input class="fi" id="nl-tx" placeholder="Notiz, Ergebnis, Instinkt ..." style="flex:1" onkeydown="if(event.key==='Enter')AL()"><button class="add-btn" onclick="AL()">EINTRAGEN</button></div>
+        </div>
+        <div class="sc"><div class="sc-t">DOS</div><textarea class="ta" id="d-dos" placeholder="Was offnet Turen? Instinkte." oninput="SV('dos',this.value)"></textarea></div>
+        <div class="sc"><div class="sc-t">DON'TS</div><textarea class="ta" id="d-donts" placeholder="Was blockiert? Was nie tun?" oninput="SV('donts',this.value)"></textarea></div>
+        <div class="sc"><div class="sc-t">N&#196;CHSTER SCHRITT</div>
+          <div class="g2"><div><label class="lbl">DATUM</label><input class="fi" type="date" id="d-fud" oninput="SV('fudate',this.value);updDs()"></div><div><label class="lbl">AKTION</label><input class="fi" id="d-fut" placeholder="Was tun?" oninput="SV('futext',this.value);updDs()"></div></div>
+        </div>
+        <div class="sc"><div class="sc-t">INSTINKT &amp; NOTIZEN</div><textarea class="ta" id="d-notes" placeholder="Bauchgefuhl. Politische Dynamik." oninput="SV('notes',this.value)"></textarea></div>
+        <!-- KOMPASS -->
+        <div class="sc full" id="kompass-sec" style="border:1px solid var(--border);background:var(--bg);">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:0;">
+            <div class="sc-t" style="margin-bottom:0;border:none;padding:0;flex:1;">&#9670; ACCOUNT KOMPASS</div>
+            <span id="kompass-date" style="font-size:9px;color:var(--dim);"></span>
+            <button class="btn sm p" id="kompass-btn" onclick="generateKompass(selId)">AKTUALISIEREN</button>
+          </div>
+          <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:10px;">
+            <div id="kompass-body-placeholder">
+              <div class="empty" style="height:80px;"><div class="empty-t">KEIN KOMPASS</div><div class="empty-s">Account w&#228;hlen und AKTUALISIEREN klicken</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="acc-r">
+    <div class="rtabs"><button class="rtab on" onclick="RT('fu',this)">FOLLOW-UPS</button><button class="rtab" onclick="RT('intel',this)">SIGNALE</button></div>
+    <div style="flex:1;overflow-y:auto;">
+      <div id="rt-fu"><div class="r-sec"><div class="r-sec-t">OFFENE FOLLOW-UPS</div><div id="fuList"></div></div></div>
+      <div id="rt-intel" style="display:none;">
+        <div class="r-sec"><div class="r-sec-t">SIGNAL ERFASSEN</div>
+          <div style="display:flex;gap:5px;margin-bottom:5px;"><select class="fsel" id="is-tp" style="flex:1"><option>MARKT</option><option>NETZWERK</option><option>WEB</option><option>MESSE</option><option>ANRUF</option><option>INSTINKT</option></select><select class="fsel" id="is-ac" style="flex:1.5"><option value="">&#8212; Account &#8212;</option></select></div>
+          <textarea class="ta" id="is-tx" style="min-height:50px;" placeholder="Signal, Beobachtung, Instinkt ..."></textarea>
+          <div style="margin-top:5px;text-align:right;"><button class="add-btn" onclick="AS()">SPEICHERN</button></div>
+        </div>
+        <div id="intelList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page" id="pg-pentagon">
+  <div class="pl">
+    <div class="plsec"><div class="pls-lbl">ANALYSE</div>
+      <button class="pcmd" onclick="SC('DEEP DIVE')">DEEP DIVE<span class="sub">Erst verstehen</span></button>
+      <button class="pcmd" onclick="SC('SCAN')">SCAN<span class="sub">Signal analysieren</span></button>
+      <button class="pcmd" onclick="SC('LEAD')">LEAD<span class="sub">Lead bewerten</span></button>
+      <button class="pcmd" onclick="SC('MEETING')">MEETING<span class="sub">Gesprach vorbereiten</span></button>
+      <button class="pcmd" onclick="SC('MAIL')">MAIL<span class="sub">Nachricht schreiben</span></button>
+    </div>
+    <div class="plsec"><div class="pls-lbl">SYSTEM</div>
+      <button class="pcmd" onclick="SC('RADAR')">RADAR<span class="sub">Signal scannen</span></button>
+      <button class="pcmd" onclick="SC('TOP10')">TOP10<span class="sub">P1 Accounts</span></button>
+      <button class="pcmd" onclick="SC('CHRISI')">CHRISI<span class="sub">5-Zeiler Oehring</span></button>
+      <button class="pcmd" onclick="SC('RISK')">RISK<span class="sub">Risiken</span></button>
+      <button class="pcmd" onclick="SC('ACADEMY')">ACADEMY<span class="sub">OEM-Training</span></button>
+    </div>
+    <div class="pex">
+      <div class="pls-lbl" style="padding:0;margin-bottom:7px;">EXPERTEN</div>
+      <div class="pex-r"><em>Shapiro</em> &#8212; TCO &#183; Pricing</div>
+      <div class="pex-r"><em>Specter</em> &#8212; Closing &#183; BATNA</div>
+      <div class="pex-r"><em>Mike Ross</em> &#8212; Tech &#183; RFQ</div>
+      <div class="pex-r"><em>Winkler</em> &#8212; Voice &#183; Human</div>
+    </div>
+    <div style="padding:8px 12px;border-top:1px solid var(--border);"><button class="btn" style="width:100%;font-size:9px;" onclick="CC()">CLEAR CHAT</button></div>
+  </div>
+  <div class="pc">
+    <div class="chat-area" id="chatArea"><div class="cwel" id="chatWel"><div class="cwt">APOLL<em>ON</em></div><div class="cws">PENTAGON &#183; 90-TAGE &#183; UMSATZ &amp; FOKUS</div></div></div>
+    <div class="cia">
+      <div class="ci-row">
+        <div class="cmd-badge" id="cmdBadge"></div>
+        <textarea class="chat-ta" id="chatIn" placeholder="Befehl oder freie Eingabe &#8212; Enter senden, Shift+Enter Zeilenumbruch" rows="1" onkeydown="CK(event)" oninput="AR(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="CH()">SENDEN</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page" id="pg-radar">
+  <div class="rl">
+    <div class="rl-t">ACCOUNTS</div>
+    <div class="rl-list" id="rAccList"></div>
+  </div>
+  <div class="radar-main">
+    <div class="radar-feed">
+      <div class="rc-wrap">
+        <div class="rc-t">SIGNAL ERFASSEN</div>
+        <div class="rc-row"><select class="fsel" id="rs-tp"><option>MARKT</option><option>NETZWERK</option><option>WEB</option><option>MESSE</option><option>ANRUF</option><option>INSTINKT</option></select><select class="fsel" id="rs-ac" style="flex:1"><option value="">&#8212; Account &#8212;</option></select></div>
+        <div class="rc-row"><textarea class="ta" id="rs-tx" style="min-height:60px;flex:1;" placeholder="LinkedIn Post, Anruf-Notiz, Marktinfo, Web-Fund, Bauchgefuhl ..."></textarea></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span style="font-size:9px;color:var(--dim);font-style:italic;">24/7 Automation &#8212; Phase 2</span><button class="add-btn" onclick="ARS()">SPEICHERN</button></div>
+      </div>
+      <div id="radarFeed"></div>
+    </div>
+  </div>
+</div>
+<div class="page" id="pg-franz">
+  <div class="fl-p">
+    <div class="fsec"><div class="fsec-t">MAIL-HEADER</div>
+      <div class="g2" style="margin-bottom:5px;"><div><label class="lbl">BETREFF</label><input class="fi" id="f-sub" placeholder="Betreff"></div><div><label class="lbl">DATUM</label><input class="fi" type="date" id="f-dt"></div></div>
+      <div class="g2" style="margin-bottom:5px;"><div><label class="lbl">ABSENDER</label><input class="fi" id="f-snd" placeholder="Name, Funktion, Firma"></div><div><label class="lbl">ACCOUNT</label><input class="fi" id="f-acc" placeholder="Firmenname"></div></div>
+      <label class="lbl">PHASE</label>
+      <select class="fi" id="f-ph"><option value="">&#8212; automatisch &#8212;</option><option>Signal erkannt</option><option>qualifiziert</option><option>technisch geprueft</option><option>Entscheider identifiziert</option><option>Angebot / Strategie aktiv</option><option>Follow-up / Verhandlung</option></select>
+    </div>
+    <div class="fsec"><div class="fsec-t">MAIL-INHALT</div><textarea class="ta" id="f-body" style="min-height:150px;" placeholder="Kompletten Mail-Text einfugen &#8212; inkl. Thread, Zitate, Signaturen ..."></textarea></div>
+    <div class="fsec"><div class="fsec-t">KONTEXT</div><textarea class="ta" id="f-ctx" style="min-height:50px;" placeholder="Letzter Stand, interne Infos, Wettbewerb ..."></textarea></div>
+    <div class="fmodes">
+      <button class="chip on" id="fm-MAIL" onclick="FM('MAIL')">MAIL</button>
+      <button class="chip" id="fm-FOLLOW-UP" onclick="FM('FOLLOW-UP')">FOLLOW-UP</button>
+      <button class="chip" id="fm-CRM" onclick="FM('CRM')">CRM</button>
+      <button class="chip" id="fm-DEAL" onclick="FM('DEAL')">DEAL</button>
+      <button class="chip" id="fm-ALERT" onclick="FM('ALERT')">ALERT</button>
+      <button class="chip" id="fm-RADAR" onclick="FM('RADAR')">RADAR</button>
+    </div>
+    <div class="factions">
+      <button class="btn p" id="franzBtn" onclick="RF()">VERARBEITEN</button>
+      <button class="btn" onclick="FD()">DEMO</button>
+      <button class="btn" onclick="FC()">LEEREN</button>
+    </div>
+  </div>
+  <div class="fr-p">
+    <div class="foh"><span class="foh-t">FRANZ OUTPUT</span><span class="foh-ts" id="franzTs">Bereit</span></div>
+    <div class="franz-out" id="franzOut"><div class="empty"><div class="empty-t">FRANZ BEREIT</div><div class="empty-s">Mail einfugen &#183; Modus wahlen &#183; Verarbeiten</div></div></div>
+  </div>
+</div>
+<div class="page" id="pg-portfolio">
+  <div class="port-hdr">
+    <span class="port-t">PORTFOLIO EXPLORER</span>
+    <div class="bc" id="portBC"><span class="bc-i on">Segment</span></div>
+    <div class="spacer"></div>
+    <button class="btn s" onclick="pReset()">&#8592; ZURUCK</button>
+  </div>
+  <div class="port-body">
+    <div class="port-nav" id="portNav"></div>
+    <div class="port-det" id="portDet"></div>
+  </div>
+</div>
+<div class="page" id="pg-knowledge">
+  <div class="kb-nav">
+    <input class="kb-srch" type="text" id="kbSrch" placeholder="Suchen ..." oninput="KBS()">
+    <div class="kb-cats" id="kbCats"></div>
+  </div>
+  <div class="kb-main">
+    <div class="kb-feed" id="kbFeed"></div>
+  </div>
+</div>
+<div class="page" id="pg-tasks">
+  <div class="task-hdr"><div class="task-title">TASKS &amp; ALERTS</div><div style="margin-left:auto;"><button class="btn" onclick="clearDone()">ERLEDIGTE L&#214;SCHEN</button></div></div>
+  <div class="task-add">
+    <input class="fi" id="t-text" placeholder="Neue Aufgabe ..." style="flex:2" onkeydown="if(event.key==='Enter')AT()">
+    <select class="fsel" id="t-acc"><option value="">&#8212; Account &#8212;</option></select>
+    <select class="fsel" id="t-prio"><option value="high">&#128308; Sofort</option><option value="med">&#128993; Bald</option><option value="low">&#9898; Irgendwann</option></select>
+    <input type="date" class="fsel" id="t-due">
+    <button class="btn p" onclick="AT()">+ TASK</button>
+  </div>
+  <div class="tsec-t">&#128308; SOFORT</div><div id="tasks-high"></div>
+  <div class="tsec-t">&#128993; BALD</div><div id="tasks-med"></div>
+  <div class="tsec-t">&#9898; BEOBACHTEN</div><div id="tasks-low"></div>
+</div>
+<div class="overlay" id="mNew"><div class="modal">
+  <div class="modal-t">NEUEN ACCOUNT ANLEGEN</div>
+  <div style="margin-bottom:9px;"><label class="lbl">FIRMA *</label><input class="fi" id="na-co" placeholder="Firmenname"></div>
+  <div class="g2" style="margin-bottom:9px;"><div><label class="lbl">HAUPTKONTAKT</label><input class="fi" id="na-cn" placeholder="Name"></div><div><label class="lbl">FUNKTION</label><input class="fi" id="na-ct" placeholder="Titel"></div></div>
+  <div class="g2" style="margin-bottom:9px;"><div><label class="lbl">STRATEGISCH</label><select class="fi" id="na-pr"><option>P1</option><option>P2</option><option>P3</option></select></div><div><label class="lbl">OPERATIV</label><select class="fi" id="na-op"><option value="A">A &#8212; Aktiv</option><option value="B">B &#8212; Pflege</option><option value="C">C &#8212; Halten</option><option value="D">D &#8212; Radar</option></select></div></div>
+  <div class="g2" style="margin-bottom:9px;"><div><label class="lbl">KATEGORIE</label><select class="fi" id="na-cat"><option>Sales aktiv</option><option>ePTO Ansatz</option><option>New Opportunities</option><option>Pipeline Target</option></select></div><div><label class="lbl">PHASE</label><select class="fi" id="na-ph"><option>Signal erkannt</option><option>qualifiziert</option><option>Entscheider identifiziert</option><option>Angebot / Strategie aktiv</option></select></div></div>
+  <div class="g2" style="margin-bottom:9px;"><div><label class="lbl">SEGMENT</label><select class="fi" id="na-seg"><option>Bau</option><option>Truck</option><option>Bus</option><option>Kommunal</option><option>Agri</option><option>Industry</option></select></div><div><label class="lbl">FOLLOW-UP DATUM</label><input class="fi" type="date" id="na-fu"></div></div>
+  <div style="margin-bottom:9px;"><label class="lbl">PRODUKT / OPPORTUNITY</label><input class="fi" id="na-prod" placeholder="OBC22K-850 ..."></div>
+  <div style="margin-bottom:9px;"><label class="lbl">ERSTE NOTIZ</label><textarea class="ta" id="na-note" rows="2" placeholder="Was weisst du bereits?"></textarea></div>
+  <div class="modal-actions"><button class="btn" onclick="CM('mNew')">ABBRECHEN</button><button class="btn p" onclick="CA()">ANLEGEN</button></div>
+</div></div>
+<div class="overlay" id="mImp"><div class="modal">
+  <div class="modal-t">CSV IMPORT</div>
+  <p style="font-size:11px;color:var(--dim);margin-bottom:11px;line-height:1.7;">Importiere RADAR_Accounts_Import.csv. Bestehende Accounts werden nicht uberschrieben.</p>
+  <div class="uzone" onclick="document.getElementById('csvF').click()">
+    <input type="file" id="csvF" accept=".csv" onchange="hCSV(this)">
+    <div style="font-size:11px;color:var(--dim);">CSV Datei auswahlen</div>
+    <div style="font-size:9px;color:var(--dim);margin-top:2px;">Company, Kategorie, Phase, Prioritat, Segment, Quelle, Produkt, Notizen</div>
+  </div>
+  <div id="importMsg"></div>
+  <div class="modal-actions"><button class="btn" onclick="dlT()">&#8595; Template</button><button class="btn" onclick="CM('mImp')">SCHLIESSEN</button></div>
+</div></div>
+
+<div class="page" id="pg-input">
+  <div style="padding:16px 24px 12px;border-bottom:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+    <div style="font-size:18px;font-weight:800;margin-bottom:4px;">INPUT CENTER</div>
+    <div style="font-size:13px;color:var(--sub);">Alles rein — Text kopieren oder Datei hochladen. APOLLON erkennt Account und Inhalt automatisch.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;">
+    <!-- LEFT: INPUT -->
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--b);overflow:hidden;">
+      
+      <!-- UPLOAD ZONE -->
+      <div id="inp-drop"
+        onclick="document.getElementById('inp-file').click()"
+        ondragover="event.preventDefault();document.getElementById('inp-drop').style.borderColor='var(--red)';document.getElementById('inp-drop').style.background='rgba(227,0,15,.04)'"
+        ondragleave="document.getElementById('inp-drop').style.borderColor='var(--b)';document.getElementById('inp-drop').style.background='transparent'"
+        ondrop="document.getElementById('inp-drop').style.borderColor='var(--b)';document.getElementById('inp-drop').style.background='transparent';handleInpDrop(event)"
+        style="margin:20px 20px 0;border:2px dashed var(--b);border-radius:12px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;flex-shrink:0;">
+        <input type="file" id="inp-file" multiple accept=".pdf,.txt,.eml,.csv,.docx,.xlsx,.msg" style="display:none" onchange="handleInpFiles(this.files)">
+        <div style="font-size:36px;margin-bottom:12px;">📁</div>
+        <div style="font-size:15px;font-weight:700;color:var(--w);margin-bottom:6px;">Dateien hochladen</div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:4px;">Drag &amp; Drop oder klicken</div>
+        <div style="font-size:10px;color:var(--dim);">PDF &nbsp;·&nbsp; Word &nbsp;·&nbsp; Excel &nbsp;·&nbsp; TXT &nbsp;·&nbsp; EML</div>
+        <button style="margin-top:16px;background:var(--red);border:none;color:#fff;font-family:inherit;font-size:12px;font-weight:700;padding:8px 24px;cursor:pointer;border-radius:8px;">DATEI WÄHLEN</button>
+      </div>
+
+      <!-- DIVIDER -->
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;flex-shrink:0;">
+        <div style="flex:1;height:1px;background:var(--b);"></div>
+        <span style="font-size:10px;font-weight:600;color:var(--dim);">ODER TEXT DIREKT EINFÜGEN</span>
+        <div style="flex:1;height:1px;background:var(--b);"></div>
+      </div>
+
+      <!-- ACCOUNT + TEXT -->
+      <div style="padding:0 16px 8px;flex-shrink:0;">
+        <select id="inp-acc" class="fsel" style="width:100%;">
+          <option value="">— Account automatisch erkennen —</option>
+        </select>
+      </div>
+      <textarea id="inp-raw" style="flex:1;resize:none;border:none;border-top:1px solid var(--b);padding:14px 16px;font-size:13px;line-height:1.75;background:var(--bg);color:var(--w);font-family:inherit;outline:none;" placeholder="E-Mail Text einkopieren, Meeting-Notizen, Anruf-Protokoll, LinkedIn-Profil...&#10;&#10;APOLLON erkennt automatisch welcher Account und was wichtig ist."></textarea>
+
+      <!-- FOOTER -->
+      <div style="padding:10px 16px;display:flex;gap:8px;border-top:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+        <button class="btn p" id="inp-btn" onclick="processInput()" style="flex:1;padding:10px 0;font-size:13px;">VERARBEITEN</button>
+        <button class="btn" onclick="document.getElementById('inp-raw').value='';document.getElementById('inp-out').innerHTML='<div class=empty><div class=empty-t>BEREIT</div></div>';document.getElementById('inp-ts').textContent='Bereit'">LEEREN</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: OUTPUT -->
+    <div style="display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:10px 16px;border-bottom:1px solid var(--b);background:var(--panel);display:flex;align-items:center;flex-shrink:0;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);">APOLLON ANALYSE</div>
+        <div id="inp-ts" style="margin-left:auto;font-size:10px;color:var(--dim);">Bereit</div>
+      </div>
+      <div id="inp-out" style="flex:1;overflow-y:auto;padding:14px 16px;">
+        <div class="empty"><div class="empty-t">BEREIT</div><div class="empty-s">Text eingeben oder Datei hochladen</div></div>
+      </div>
+      <div id="inp-actions" style="display:none;padding:10px 16px;border-top:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+        <div style="font-size:9px;font-weight:600;color:var(--dim);margin-bottom:6px;">SPEICHERN IN</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn p s" onclick="saveInpToAccount()">ACCOUNT HISTORY</button>
+          <button class="btn s" onclick="G('docs')">→ ARCHIV</button>
+          <button class="btn s" onclick="G('pentagon')">→ PENTAGON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page" id="pg-kalender">
+  <div style="display:flex;height:100%;overflow:hidden;">
+    <div style="width:300px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:var(--panel);">
+      <div style="padding:11px 13px;border-bottom:1px solid var(--border);">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:7px;">KALENDER</div>
+        <div style="display:flex;gap:5px;align-items:center;">
+          <button class="btn s" onclick="kalPrev()">&#8592;</button>
+          <div id="kal-month" style="flex:1;text-align:center;font-size:11px;font-weight:700;"></div>
+          <button class="btn s" onclick="kalNext()">&#8594;</button>
+        </div>
+      </div>
+      <div style="padding:9px 11px;border-bottom:1px solid var(--border);">
+        <div id="kal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;font-size:9px;text-align:center;"></div>
+      </div>
+      <div style="flex:1;overflow-y:auto;" id="kal-list"></div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:11px 16px;border-bottom:1px solid var(--border);background:var(--panel);font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);">TERMIN HINZUFUEGEN</div>
+      <div style="padding:13px 16px;flex:1;overflow-y:auto;">
+        <div class="g2" style="margin-bottom:8px;">
+          <div><label class="lbl">DATUM *</label><input class="fi" type="date" id="kev-date"></div>
+          <div><label class="lbl">UHRZEIT</label><input class="fi" type="time" id="kev-time" value="10:00"></div>
+        </div>
+        <label class="lbl">TITEL *</label>
+        <input class="fi" id="kev-title" placeholder="Sennebogen Meeting - Rahmenvertrag" style="margin-bottom:8px;">
+        <label class="lbl">ACCOUNT</label>
+        <select class="fi" id="kev-acc" style="margin-bottom:8px;"><option value="">- Account -</option></select>
+        <label class="lbl">TYP</label>
+        <select class="fi" id="kev-type" style="margin-bottom:8px;"><option>MEETING</option><option>ANRUF</option><option>FOLLOW-UP</option><option>DEMO</option><option>MESSE</option><option>INTERN</option></select>
+        <label class="lbl">NOTIZ / AGENDA</label>
+        <textarea class="ta" id="kev-note" style="min-height:70px;margin-bottom:10px;" placeholder="Ziel des Termins, Agenda, Vorbereitung..."></textarea>
+        <button class="btn p" onclick="addKalEvent()" style="width:100%;">TERMIN SPEICHERN</button>
+        <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:11px;">
+          <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:7px;">NAECHSTE 7 TAGE</div>
+          <div id="kal-next7"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+const SYS="Du bist APOLLON, das zentrale Sales-Intelligence- und Execution-System von Georgios Iakovidis (George), Senior BDM bei REFUdrive GmbH.\n\nOBERSTE REGEL: Erst verstehen. Dann fragen. Dann verdichten. Dann handeln.\nKein operativer Schritt ohne Kontext. Keine Mail. Kein Follow-up. Keine Phase. Kein CRM-Eintrag.\n\nREFUDRIVE:\nJV PRETTL Group (DE) + Kalyani/Bharat Forge (IN). HQ Pfullingen BW. CEO Massimo Ottino. Head of Sales Christian Oehring (Chrisi). 1 Mio EUR Verlust 2024. George: Start 01.05.2026, 15h/Woche, 20+ Jahre NFZ-Erfahrung DACH.\n\nPRODUKTE:\nRPCS 730: 80-320 kVA Traktionsinverter. SiC 99%. 300-850V DC. IP67/IP6K9K. -25 bis +85C kein Derating. 1200A Peak. 2 Wochen IBN via REFUdriver SW.\nOBC-22K: 22kW AC-Laden. DC 550-850V. SiC. IP6K9K. SAE J1939. Parallel bis 8 Einheiten = 176kW.\nRPCS 790: DC/DC 3/4/6kW. bis 900V. IP67. AEC-qualifiziert. -40 bis +85C.\nAFE-220: V2G bidirektional. bis 220kW. IP68.\nAuxiliary: 2x28K/2x55K. ePTO Kommunal/NFZ.\nISO 9001, ISO 50001, KBA-Zertifikat (bis 04.01.2027), TUeV SUeD.\n\nWETTBEWERB:\nDana TM4: HIGH. 35 Wochen Lieferzeit. Mindestmengen.\nDanfoss Editron: MED. Marine-DNA.\nZAPI: MED. Niedervolt.\nBosch: LOW. PKW-fokussiert.\nCN-Player: HIGH. Gefaehrdet 80% Bundesfoerderung.\n\nKILLER-SAETZE:\nvs Dana: Dana liefert in 35 Wochen. Wie viele Auftraege verliert ihr in dieser Zeit? Wir stehen 2 Wochen nach Auftragserteilung in eurer Halle.\nvs CN: CN-Inverter gefaehrden die 80% Bundesfoerderung. REFUdrive ist KBA-zertifiziert, TUeV SUeD geprueft.\nDerating: Unser Inverter faehrt im August einen Suedschwarzwald-Anstieg mit 40 Grad vollbeladen ohne Leistungsreduzierung. Was habt ihr gerade drin?\n\nACCOUNT LOGIC - ZWEI EBENEN (NIE VERMISCHEN):\nEbene 1 - Strategisch: P1=kritisch, P2=wichtig, P3=nachrangig\nEbene 2 - Operativ: A=aktiv jetzt (Deep Dive+FU woechentlich+CRM taglich), B=Pflege (monatlich+Signale), C=halten (nur reagieren), D=beobachten (nur Radar)\n\nDEEP-DIVE STOPP-REGEL:\nPruefe zuerst: Unternehmen? OEM/Systemlieferant/Zulieferer? Bestandskunde/Neukunde? Buying Center? Pain Points? Fit?\nWenn unklar: Frage. Maximal 3 praezise Fragen. Dann zusammenfassen. Erst dann handeln.\n\nPENTAGON AUSGABE: RESEARCH / BENCHMARK / KONTEXT / KNOWLEDGE / FIT / PAIN POINTS / TRIGGERS / ACTION / NAECHSTER SCHRITT / ABLAGEORT\nRADAR AUSGABE: SIGNAL / QUELLE / DATUM / ACCOUNT-MARKT / SIGNALSTAERKE / LAYER 1 / LAYER 2 / LAYER 3 / INTERPRETATION / FIT / PRIORITAET / NAECHSTE AKTION / ABLAGEORT\nFRANZ AUSGABE: BETREFF / MAIL-TYP / THREAD / ACCOUNT / PROJEKT-PHASE / AUSWERTUNG / SENSIBILISIERUNG / FIT / DTR-STRATEGIE / NAECHSTE AKTION / ABLAGEORT\nACCOUNT AUSGABE: ACCOUNT / STRATEGIC TIER / ACTIVITY TIER / UMSATZHEBEL / STRATEGISCHE BEDEUTUNG / AKTUELLER STATUS / LETZTER KONTAKT / SIGNALE / RISIKO / NAECHSTER SCHRITT / WORKFLOW\n\nWINKLER-STIL: Schreibe wie ein erfahrener Mensch. Direkt. Klar. Auf Augenhoehe. KEINE Bulletpoints. KEINE Listen. Nur Prosa. Keine Floskeln. Zahlen nutzen. OEM-Fachbegriffe: TCO, SOP, Design-In, RFQ, IBN, PPAP.\n\n90-TAGE-FOKUS: Alles auf Umsatz, Pipeline, Fit, Tempo, Sichtbarkeit, saubere Execution. Priorisierung nach Umsatzwirkung.\nRot=sofort. Gelb=qualifizieren. Blau=beobachten. Grau=ignorieren.\n\nGEORGE STEUERT. APOLLON DENKT MIT. APOLLON VERDICHTET. APOLLON PRIORISIERT. APOLLON LIEFERT HANDLUNG.";
+// DATA
+const SK="ap_a",SS="ap_s",ST="ap_t",KS="ap_k",DS="ap_d";
+function ld(k){try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];}}
+function sd(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function td(){return new Date().toISOString().split("T")[0];}
+function esc(s){return(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+let accounts=[],signals=[],tasks=[],docs=[],selId=null,chatHist=[],kalEvents=[],kalYear=new Date().getFullYear(),kalMonth=new Date().getMonth();
+let flt={pr:"ALL",op:"ALL",ph:"ALL"},activeCmd="DEEP DIVE",activeFM="MAIL";
+const PAGES=["home","input","accounts","pentagon","radar","franz","portfolio","knowledge","tasks","kalender","docs"];
+
+function boot(){
+try{
+accounts=ld(SK);signals=ld(SS);tasks=ld(ST);try{const kd=ld(KS);if(kd&&kd.length)kalEvents=kd;}catch(e){kalEvents=[];}
+try{const dd=ld(DS);if(dd&&dd.length)docs=dd;}catch(e){docs=[];}
+console.log("ld accounts:",accounts.length);
+// Always load seed as base if localStorage empty or corrupted
+if(!accounts||!accounts.length){
+  try{seed();sd(SK,accounts);}catch(e){console.error("Seed:",e);}
+}
+console.log("Accounts:",accounts.length);
+console.log("APOLLON boot complete: "+accounts.length+" accounts");
+const k=localStorage.getItem("ap_key");
+if(k){document.getElementById("apiKey").value=k;dot(k.startsWith("sk-ant"));}
+document.getElementById("apiKey").addEventListener("input",function(){localStorage.setItem("ap_key",this.value);dot(this.value.startsWith("sk-ant"));});
+document.getElementById("f-dt").value=td();
+document.getElementById("nl-dt").value=td();
+document.getElementById("t-due").value=td();
+document.getElementById("home-date").textContent=new Date().toLocaleDateString("de-DE",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+renderAll();initPortfolio();initKB();
+}catch(e){console.error("APOLLON boot error:",e);console.error("APOLLON boot error:",e.message);}
+}
+function dot(ok){document.getElementById("sdot").classList.toggle("ok",ok);}
+function renderAll(){
+try{updDocSels();}catch(e){}
+  try{renderDocs();}catch(e){}
+  try{RL();}catch(e){console.warn("RL:",e.message);}
+try{renderFU();}catch(e){console.warn("renderFU:",e.message);}
+try{renderIntel();}catch(e){console.warn("renderIntel:",e.message);}
+try{renderHome();}catch(e){console.warn("renderHome:",e.message);}
+try{renderTasks();}catch(e){console.warn("renderTasks:",e.message);}
+try{updInputSel();}catch(e){console.warn("updInputSel:",e.message);}
+try{updKalSel();}catch(e){console.warn("updKalSel:",e.message);}
+try{updTSel();}catch(e){console.warn("updTSel:",e.message);}
+try{rRadar();}catch(e){console.warn("rRadar:",e.message);}
+try{updSel();}catch(e){console.warn("updSel:",e.message);}
+}
+function G(p){
+document.querySelectorAll(".page").forEach(x=>x.classList.remove("on"));
+document.querySelectorAll(".nb").forEach(x=>x.classList.remove("on"));
+document.getElementById("pg-"+p).classList.add("on");
+const i=PAGES.indexOf(p);if(i>=0)document.querySelectorAll(".nb")[i].classList.add("on");
+if(p==="radar"){updRSel();rRadar();}
+if(p==="tasks")updTSel();
+if(p==="portfolio")renderPort();
+if(p==="knowledge")renderKB();
+if(p==="kalender"){updKalSel();renderKal();}
+  if(p==="docs"){updDocSels();renderDocs();}
+}
+function renderHome(){
+
+const opA=accounts.filter(a=>a.op==="A");
+document.getElementById("kpi-opA").textContent=opA.length;
+document.getElementById("kpi-p1").textContent=accounts.filter(a=>a.prio==="P1").length;
+document.getElementById("kpi-od").textContent=accounts.filter(a=>a.fudate&&a.fudate<td()).length;
+document.getElementById("kpi-total").textContent=accounts.length;
+document.getElementById("kpi-sig").textContent=signals.length;
+document.getElementById("h-opA").innerHTML=opA.slice(0,5).map(a=>`<div class="hi r" onclick="G('accounts');SA('${a.id}')"><div class="hi-n">${esc(a.company)}</div><div class="hi-m"><span class="t-${a.prio}">${a.prio}</span><span>${a.phase}</span><span>${esc(a.product||"—")}</span></div></div>`).join("")||"<div style='font-size:10px;color:var(--dim);'>Keine A-Accounts.</div>";
+const od=accounts.filter(a=>a.fudate&&a.fudate<td()&&a.futext).slice(0,4);
+document.getElementById("h-od").innerHTML=od.map(a=>`<div class="hi a" onclick="G('accounts');SA('${a.id}')"><div class="hi-n">${esc(a.company)}</div><div class="hi-m"><span class="od">${a.fudate}</span><span>${esc(a.futext||"")}</span></div></div>`).join("")||"<div style='font-size:10px;color:var(--dim);'>Keine überfälligen FU.</div>";
+const elsig=document.getElementById("h-sigs");if(elsig)elsig.innerHTML=signals.slice(0,4).map(s=>`<div class="hbr"><div class="hbr-dot" style="background:var(--green)"></div><span class="hbr-n">${esc(s.accName||"Allgemein")}</span><span class="hbr-m">${s.type} · ${s.date}</span></div>`).join("")||"<div class='hb-nil'>Noch keine Signale.</div>";
+const ot=tasks.filter(t=>!t.done).slice(0,4);
+// Add upcoming meetings to home
+const upcoming=kalEvents?kalEvents.filter(e=>e.date>=td()).slice(0,3):[];
+if(upcoming.length&&document.getElementById("h-tasks")){
+  const taskHtml=ot.map(t=>`<div class="hi ${t.prio==="high"?"r":t.prio==="med"?"a":"g"}"><div class="hi-n">${esc(t.text)}</div><div class="hi-m"><span class="${t.due<td()?"od":""}">${t.due||"—"}</span></div></div>`).join("");
+  const meetHtml=upcoming.map(e=>`<div class="hi a" onclick="G('kalender')"><div class="hi-n">${esc(e.title)}</div><div class="hi-m"><span>${e.date} ${e.time||""}</span><span>${esc(e.accName||"")}</span></div></div>`).join("");
+  const elht=document.getElementById("h-tasks");if(elht)elht.innerHTML=(meetHtml+taskHtml)||"<div class='hb-empty'>Keine Termine.</div>";
+} else {
+const elht2=document.getElementById("h-tasks");if(elht2)elht2.innerHTML=ot.map(function(t){return "<div class='hbr'><div class='hbr-dot'></div><span class='hbr-n'>"+esc(t.text)+"</span><span class='hbr-m'>"+(t.due||"")+"</span></div>";}).join("")||"<div class='hb-nil'>Keine Tasks.</div>";
+}
+}  // close renderHome
+function SF(type,btn){
+const m={pr:"prC",op:"opC",ph:"phC"};
+document.querySelectorAll("#"+m[type]+" .chip").forEach(c=>c.classList.remove("on"));
+btn.classList.add("on");flt[type]=btn.dataset.v;RL();
+}
+function RL(){
+const srch=document.getElementById("accSrch");
+if(!srch)return;
+const q=srch.value.toLowerCase();
+let list=[...accounts];
+if(flt.pr!=="ALL")list=list.filter(a=>a.prio===flt.pr);
+if(flt.op!=="ALL")list=list.filter(a=>a.op===flt.op);
+if(flt.ph!=="ALL")list=list.filter(a=>a.phase===flt.ph);
+if(q)list=list.filter(a=>a.company.toLowerCase().includes(q)||(a.contacts||[]).some(c=>c.name.toLowerCase().includes(q)));
+const oo={A:0,B:1,C:2,D:3},po={P1:0,P2:1,P3:2};
+const pho={"Angebot / Strategie aktiv":0,"Follow-up / Verhandlung":1,"Entscheider identifiziert":2,"technisch geprueft":3,"qualifiziert":4,"Signal erkannt":5,"gewonnen":6,"verloren":7};
+list.sort((a,b)=>{const od=(oo[a.op]||3)-(oo[b.op]||3);if(od)return od;const pd=(po[a.prio]||3)-(po[b.prio]||3);return pd||(pho[a.phase]||5)-(pho[b.phase]||5);});
+const cntEl=document.getElementById("accCnt");if(cntEl)cntEl.textContent=list.length+"/"+accounts.length;
+const el=document.getElementById("accList");
+if(!el)return;
+if(!list.length){el.innerHTML="<div style='padding:12px 10px;font-size:10px;color:var(--dim);'>Keine Accounts.</div>";return;}
+el.innerHTML=list.map(a=>{
+  const mc=(a.contacts||[])[0],od=a.fudate&&a.fudate<td();
+  return`<div class="ai${a.id===selId?" sel":""}" onclick="SA('${a.id}')">
+    <div class="ai-n">${esc(a.company)}</div>
+    <div class="ai-s">${mc?esc(mc.name)+" · "+esc(mc.title):"—"}</div>
+    <div class="ai-r">
+      <span class="t-${a.prio}" style="font-size:9px;font-weight:800;padding:1px 5px;">${a.prio}</span>
+      <span class="o-${a.op}" style="font-size:8px;padding:1px 5px;">${a.op}</span>
+      <span class="pbadge ${phC(a.phase)}">${esc(a.phase)}</span>
+      ${a.fudate?`<span class="fud${od?" od":""}">${a.fudate}</span>`:""}
+    </div>
+  </div>`;
+}).join("");
+}
+function phC(p){return{"Signal erkannt":"ph-s","qualifiziert":"ph-q","technisch geprueft":"ph-t","Entscheider identifiziert":"ph-e","Angebot / Strategie aktiv":"ph-a","Follow-up / Verhandlung":"ph-f","gewonnen":"ph-g","verloren":"ph-l"}[p]||"ph-u";}
+const WF={
+A:{t:"WORKFLOW A — AKTIV JETZT",b:"Deep Dive läuft. Follow-up wöchentlich. CRM täglich. Meeting vorbereiten. Bei Risiko sofort eskalieren."},
+B:{t:"WORKFLOW B — LAUFENDE PFLEGE",b:"Signale beobachten. Monatlicher Check-in. Opportunity aktiv halten. Bei Bewegung auf A hochstufen."},
+C:{t:"WORKFLOW C — HALTEN",b:"Kein aktiver Aufwand. Nur reagieren wenn Kunde sich meldet. Quartal: Trigger prüfen."},
+D:{t:"WORKFLOW D — NUR RADAR",b:"Nur Radar-Alert bei starkem Signal. Kein Follow-up. Kein CRM-Aufwand. Nur bei klarem Hebel."}
+};
+function SA(id){
+selId=id;RL();G("accounts");
+const a=accounts.find(x=>x.id===id);if(!a)return;
+document.getElementById("detE").style.display="none";
+document.getElementById("detC").style.display="flex";
+document.getElementById("d-co").textContent=a.company;
+document.getElementById("d-phase").value=a.phase||"Signal erkannt";
+document.getElementById("d-prio").value=a.prio||"P2";
+document.getElementById("d-op").value=a.op||"D";
+document.getElementById("d-cat").value=a.cat||"New Opportunities";
+document.getElementById("d-prod").value=a.product||"";
+document.getElementById("d-vol").value=a.volume||"";
+document.getElementById("d-sop").value=a.sop||"";
+document.getElementById("d-nre").value=a.nre||"";
+document.getElementById("d-dos").value=a.dos||"";
+document.getElementById("d-donts").value=a.donts||"";
+document.getElementById("d-notes").value=a.notes||"";
+document.getElementById("d-fud").value=a.fudate||"";
+document.getElementById("d-fut").value=a.futext||"";
+updBd();renderWF();updDs();renderCts();renderLog();
+const ll=(a.log||[]).slice(-1)[0];
+document.getElementById("d-lc").textContent=ll?`${ll.date} · ${ll.type}`:"—";
+document.getElementById("d-fit").textContent=a.product?a.product.split(" ")[0]:"—";
+document.getElementById("d-risk").textContent=a.donts?a.donts.slice(0,55)+"…":"—";
+}
+function updBd(){
+const pr=document.getElementById("d-prio").value,op=document.getElementById("d-op").value;
+document.getElementById("d-tiers-row").innerHTML=`<span class="t-${pr}" style="font-size:10px;font-weight:800;">STRATEGISCH ${pr}</span><span class="o-${op}" style="font-size:10px;font-weight:800;">OPERATIV ${op}</span>`;
+}
+function updDs(){
+if(!selId)return;
+const a=accounts.find(x=>x.id===selId);if(!a)return;
+document.getElementById("d-vol-d").textContent=a.volume||"—";
+document.getElementById("d-stat-d").textContent=a.phase||"—";
+document.getElementById("d-next-d").textContent=a.fudate&&a.futext?a.fudate+" · "+a.futext.slice(0,28):(a.futext||"—");
+}
+function renderWF(){
+const op=document.getElementById("d-op").value||"D",cfg=WF[op];
+const b=document.getElementById("wf-b");
+b.className="wf-banner "+op;
+document.getElementById("wf-t").className="wf-t "+op;
+document.getElementById("wf-t").textContent=cfg.t;
+document.getElementById("wf-body").textContent=cfg.b;
+}
+function SV(f,v){if(!selId)return;const i=accounts.findIndex(a=>a.id===selId);if(i<0)return;accounts[i][f]=v;sd(SK,accounts);if(["phase","prio","op","fudate"].includes(f)){RL();renderFU();renderHome();}}
+function renderCts(){
+const a=accounts.find(x=>x.id===selId),el=document.getElementById("d-cts");
+if(!a||(a.contacts||[]).length===0){el.innerHTML="<div style='font-size:10px;color:var(--dim);margin-bottom:5px;'>Noch keine Kontakte.</div>";return;}
+el.innerHTML=a.contacts.map((c,i)=>`<div class="ct-row"><span class="ct-n">${esc(c.name)}</span><span class="ct-t">${esc(c.title)}</span><span class="ct-r">${esc(c.role)}</span><button class="ib" onclick="rCt(${i})">✕</button></div>`).join("");
+}
+function ACt(){
+const n=document.getElementById("nc-n").value.trim();if(!n||!selId)return;
+const i=accounts.findIndex(a=>a.id===selId);
+if(!accounts[i].contacts)accounts[i].contacts=[];
+accounts[i].contacts.push({id:uid(),name:n,title:document.getElementById("nc-t").value.trim(),role:document.getElementById("nc-r").value});
+sd(SK,accounts);document.getElementById("nc-n").value="";document.getElementById("nc-t").value="";
+renderCts();RL();
+}
+function rCt(idx){const i=accounts.findIndex(a=>a.id===selId);accounts[i].contacts.splice(idx,1);sd(SK,accounts);renderCts();}
+function renderLog(){
+const a=accounts.find(x=>x.id===selId),el=document.getElementById("d-log");
+if(!a||(a.log||[]).length===0){el.innerHTML="<div style='font-size:10px;color:var(--dim);padding:4px 0;'>Noch keine Einträge.</div>";return;}
+el.innerHTML=[...(a.log||[])].reverse().map(l=>`<div class="log-item"><span class="ld">${l.date}</span><span class="lt lt-${l.type}">${l.type}</span><span class="lb">${esc(l.text)}</span><button class="ib" onclick="rLog('${l.id}')">✕</button></div>`).join("");
+const ll=a.log[a.log.length-1];if(ll)document.getElementById("d-lc").textContent=`${ll.date} · ${ll.type}`;
+}
+function AL(){
+const text=document.getElementById("nl-tx").value.trim();if(!text||!selId)return;
+const i=accounts.findIndex(a=>a.id===selId);
+if(!accounts[i].log)accounts[i].log=[];
+accounts[i].log.push({id:uid(),type:document.getElementById("nl-tp").value,date:document.getElementById("nl-dt").value||td(),text});
+sd(SK,accounts);document.getElementById("nl-tx").value="";renderLog();
+}
+function rLog(lid){const i=accounts.findIndex(a=>a.id===selId);accounts[i].log=(accounts[i].log||[]).filter(l=>l.id!==lid);sd(SK,accounts);renderLog();}
+function DA(){if(!selId)return;const a=accounts.find(x=>x.id===selId);if(!confirm("Account "+a.company+" löschen?"))return;accounts=accounts.filter(x=>x.id!==selId);sd(SK,accounts);selId=null;document.getElementById("detC").style.display="none";document.getElementById("detE").style.display="flex";renderAll();}
+function toP(){
+const a=accounts.find(x=>x.id===selId);if(!a)return;
+const ct=(a.contacts||[]).map(c=>`${c.name} (${c.title})`).join(", ");
+const logs=(a.log||[]).slice(-3).map(l=>`[${l.date}] ${l.type}: ${l.text}`).join("\n");
+document.getElementById("chatIn").value=`DEEP DIVE: ${a.company}\nStrategisch: ${a.prio} | Operativ: ${a.op} | Phase: ${a.phase}\nKontakte: ${ct||"—"}\nProdukt: ${a.product||"—"} | Volumen: ${a.volume||"—"}\nDOS: ${a.dos||"—"}\nDONTs: ${a.donts||"—"}\nInstinkt: ${a.notes||"—"}\nLetzte Einträge:\n${logs||"—"}`;
+SC("DEEP DIVE");G("pentagon");
+}
+function RT(t,btn){
+document.querySelectorAll(".rtab").forEach(x=>x.classList.remove("on"));btn.classList.add("on");
+document.getElementById("rt-fu").style.display=t==="fu"?"block":"none";
+document.getElementById("rt-intel").style.display=t==="intel"?"block":"none";
+if(t==="intel")updISel();
+}
+function renderFU(){
+const list=accounts.filter(a=>a.fudate&&a.futext).sort((a,b)=>a.fudate.localeCompare(b.fudate));
+const el=document.getElementById("fuList");
+if(!list.length){el.innerHTML="<div style='font-size:10px;color:var(--dim);padding:8px 0;'>Keine Follow-ups.</div>";return;}
+el.innerHTML=list.map(a=>{const od=a.fudate<td();return`<div class="fu-card" onclick="SA('${a.id}')"><div class="fu-co">${esc(a.company)}</div><div class="fu-info"><span class="fu-date${od?" od":""}">${od?"⚠ ":""}${a.fudate}</span><span>${esc((a.futext||"").slice(0,35))}…</span></div></div>`;}).join("");
+}
+function updISel(){const el=document.getElementById("is-ac");if(!el)return;el.innerHTML="<option value=''>— Account —</option>"+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join("");}
+function AS(){
+const text=document.getElementById("is-tx").value.trim();if(!text)return;
+const accId=document.getElementById("is-ac").value,accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
+signals.unshift({id:uid(),type:document.getElementById("is-tp").value,accId,accName,text,date:td()});
+sd(SS,signals);document.getElementById("is-tx").value="";renderIntel();renderHome();
+}
+function renderIntel(){
+const el=document.getElementById("intelList");if(!el)return;
+if(!signals.length){el.innerHTML="<div style='font-size:10px;color:var(--dim);padding:9px 11px;'>Noch keine Signale.</div>";return;}
+el.innerHTML=signals.map(s=>`<div class="intel-sm ${s.type}"><div class="ih"><span class="ibadge ib-${s.type}">${s.type}</span>${s.accName?`<span class="iacc">${esc(s.accName)}</span>`:""}<span class="idate">${s.date}</span><button style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:11px;" onclick="dSig('${s.id}')">✕</button></div><div class="ibody">${esc(s.text)}</div></div>`).join("");
+}
+function dSig(id){signals=signals.filter(s=>s.id!==id);sd(SS,signals);renderIntel();renderHome();}
+function OM(id){document.getElementById(id).classList.add("open");}
+function CM(id){document.getElementById(id).classList.remove("open");}
+document.addEventListener("click",e=>{if(e.target.classList.contains("overlay"))e.target.classList.remove("open");});
+function CA(){
+const co=document.getElementById("na-co").value.trim();if(!co){alert("Firma ist Pflicht.");return;}
+const a={id:uid(),company:co,cat:document.getElementById("na-cat").value,phase:document.getElementById("na-ph").value,prio:document.getElementById("na-pr").value,op:document.getElementById("na-op").value,seg:document.getElementById("na-seg").value,source:"Kaltakquise",product:document.getElementById("na-prod").value,volume:"",sop:"",nre:"",dos:"",donts:"",notes:document.getElementById("na-note").value,fudate:document.getElementById("na-fu").value,futext:"Erster Kontakt aufnehmen",contacts:[],log:[]};
+const cn=document.getElementById("na-cn").value.trim();
+if(cn)a.contacts.push({id:uid(),name:cn,title:document.getElementById("na-ct").value.trim(),role:"Entscheider"});
+if(a.notes)a.log.push({id:uid(),type:"NOTE",date:td(),text:a.notes});
+accounts.push(a);sd(SK,accounts);CM("mNew");renderAll();SA(a.id);
+["na-co","na-cn","na-ct","na-prod","na-note","na-fu"].forEach(id=>document.getElementById(id).value="");
+}
+function hCSV(input){
+const file=input.files[0];if(!file)return;
+const r=new FileReader();
+r.onload=e=>{
+  try{
+    const lines=e.target.result.split("\n").filter(l=>l.trim());
+    let added=0,sk=0;
+    for(let i=1;i<lines.length;i++){
+      const v=pCSV(lines[i]),co=(v[0]||"").trim();if(!co)continue;
+      if(accounts.find(a=>a.company.toLowerCase()===co.toLowerCase())){sk++;continue;}
+      const a={id:uid(),company:co,cat:v[1]||"New Opportunities",phase:v[2]||"Signal erkannt",prio:v[3]||"P3",op:"D",seg:v[4]||"—",source:v[5]||"Kaltakquise",product:v[6]||"",volume:"",sop:"",nre:"",dos:"",donts:"",notes:v[7]||"",fudate:"",futext:"",contacts:[],log:[]};
+      if(a.notes)a.log.push({id:uid(),type:"NOTE",date:td(),text:a.notes});
+      accounts.push(a);added++;
+    }
+    sd(SK,accounts);renderAll();
+    document.getElementById("importMsg").innerHTML=`<div style="font-size:11px;color:var(--green);margin-top:6px;">✓ ${added} importiert, ${sk} übersprungen.</div>`;
+  }catch(err){document.getElementById("importMsg").innerHTML=`<div style="font-size:11px;color:var(--red);margin-top:6px;">Fehler: ${err.message}</div>`;}
+};
+r.readAsText(file);input.value="";
+}
+function pCSV(line){const r=[];let c="",q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;}else if(ch===","&&!q){r.push(c.trim());c="";}else{c+=ch;}}r.push(c.trim());return r;}
+function dlT(){const b=new Blob(["Company,Kategorie,Phase,Priorität,Segment,Quelle,Produkt,Notizen\nMein Kunde GmbH,New Opportunities,Signal erkannt,P2,Bau,Kaltakquise,OBC22K-850,Erste Notiz"],{type:"text/csv"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download="APOLLON_Template.csv";a.click();URL.revokeObjectURL(u);}
+function SC(cmd){
+activeCmd=cmd;
+document.querySelectorAll(".pcmd").forEach(b=>b.classList.remove("on"));
+const cmds=["DEEP DIVE","SCAN","LEAD","MEETING","MAIL","RADAR","TOP10","CHRISI","RISK","ACADEMY"];
+const i=cmds.indexOf(cmd);if(i>=0)document.querySelectorAll(".pcmd")[i].classList.add("on");
+const badge=document.getElementById("cmdBadge");badge.textContent=cmd+":";badge.classList.add("show");
+document.getElementById("chatIn").focus();
+}
+function AR(el){el.style.height="auto";el.style.height=Math.min(el.scrollHeight,110)+"px";}
+function CK(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();CH();}}
+function CC(){chatHist=[];document.getElementById("chatArea").innerHTML='<div class="cwel"><div class="cwt">APOLL<em>ON</em></div><div class="cws">PENTAGON · 90-TAGE · UMSATZ &amp; FOKUS</div></div>';document.getElementById("cmdBadge").classList.remove("show");}
+function addMsg(role,text,thinking){
+const w=document.getElementById("chatWel");if(w)w.remove();
+const area=document.getElementById("chatArea");
+const div=document.createElement("div");div.className="msg msg-"+role;
+const lbl=document.createElement("div");lbl.className="msg-lbl";lbl.textContent=role==="user"?"GEORGE":"APOLLON";
+const body=document.createElement("div");body.className="msg-body";
+if(thinking){body.innerHTML='<div style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:11px;padding:10px 0;">APOLLON analysiert <div class="dots"><span></span><span></span><span></span></div></div>';}
+else if(role==="ai"){body.innerHTML=fmtChat(text);}
+else{body.textContent=text;}
+div.appendChild(lbl);div.appendChild(body);area.appendChild(div);area.scrollTop=area.scrollHeight;return div;
+}
+const HDRS=["KURZSIGNAL","RESEARCH","BENCHMARK","KONTEXT","KNOWLEDGE","FIT","PAIN POINTS","TRIGGERS","ACTION","NÄCHSTER SCHRITT","ABLAGEORT","XRAY","TECHNISCHER / STRATEGISCHER XRAY","FIT / HYPOTHESE","ENTSCHEIDER / POLITIK","NÄCHSTE AKTION","FEHLENDE DATEN","SIGNAL","LAYER 1","LAYER 2","LAYER 3","INTERPRETATION","SIGNALSTÄRKE","QUELLE","DATUM","ACCOUNT / MARKT","PRIORITÄT","BETREFF","MAIL-TYP","THREAD","ACCOUNT","PROJEKT / PHASE","AUSWERTUNG","SENSIBILISIERUNG","DTR / STRATEGIE","STRATEGIC TIER","ACTIVITY TIER","UMSATZHEBEL","WORKFLOW"];
+function fmtChat(text){
+const ACTION_HDRS=["NÄCHSTER SCHRITT","NACHSTER SCHRITT","ACTION","NÄCHSTE AKTION","NACHSTE AKTION"];
+const lines=text.split("\n");let html="",buf="",hdr="";
+function flush(){
+  if(!hdr&&!buf.trim())return;
+  const isAction=ACTION_HDRS.some(h=>hdr===h);
+  if(isAction){
+    html+=`<div class="action-block"><div class="action-block-t">${esc(hdr)}</div><div class="action-block-b">${esc(buf.trim())}</div></div>`;
+  } else {
+    if(hdr)html+=`<div class="sec-h">${esc(hdr)}</div>`;
+    if(buf.trim())html+=`<div class="sec-b">${esc(buf.trim())}</div>`;
+  }
+  buf="";hdr="";
+}
+for(const line of lines){const t=line.trim();if(HDRS.includes(t)||ACTION_HDRS.includes(t)){flush();hdr=t;}else{buf+=line+"\n";}}
+flush();
+return html||`<div class="sec-b">${esc(text)}</div>`;
+}
+async function CH(){
+const key=document.getElementById("apiKey").value.trim();
+if(!key){alert("API Key fehlt.");return;}
+const input=document.getElementById("chatIn");
+const raw=input.value.trim();if(!raw)return;
+const full=activeCmd?activeCmd+": "+raw:raw;
+addMsg("user",full);chatHist.push({role:"user",content:full});
+input.value="";input.style.height="auto";
+document.getElementById("sendBtn").disabled=true;
+const thinkEl=addMsg("ai","",true);
+try{
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:2048,system:SYS,messages:chatHist})});
+  const d=await res.json();if(d.error)throw new Error(d.error.message);
+  const reply=d.content[0].text;chatHist.push({role:"assistant",content:reply});
+  thinkEl.remove();addMsg("ai",reply);
+}catch(err){thinkEl.remove();addMsg("ai","Fehler: "+err.message);}
+document.getElementById("sendBtn").disabled=false;
+}
+function rRadar(){
+updRSel();
+const el=document.getElementById("rAccList");
+el.innerHTML=accounts.filter(a=>a.op==="A"||a.op==="B"||a.prio==="P1").slice(0,20).map(a=>`<div class="rai" onclick="G('accounts');SA('${a.id}')">${esc(a.company)} <span class="t-${a.prio}" style="font-size:8px;">${a.prio}</span><span class="o-${a.op}" style="font-size:8px;margin-left:4px;">${a.op}</span></div>`).join("");
+const feed=document.getElementById("radarFeed");
+if(!signals.length){feed.innerHTML="";return;}
+feed.innerHTML=signals.map(s=>`<div class="radar-card ${s.type}"><div class="rch"><span class="rcb rcb-${s.type}">${s.type}</span>${s.accName?`<span class="rca">${esc(s.accName)}</span>`:""}<span class="rcd">${s.date}</span><button class="del-btn" onclick="dSig2('${s.id}')">✕</button></div><div class="rcbody">${esc(s.text)}</div></div>`).join("");
+}
+function updRSel(){const el=document.getElementById("rs-ac");if(!el)return;el.innerHTML="<option value=''>— Account —</option>"+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join("");}
+function ARS(){
+const text=document.getElementById("rs-tx").value.trim();if(!text)return;
+const accId=document.getElementById("rs-ac").value,accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
+signals.unshift({id:uid(),type:document.getElementById("rs-tp").value,accId,accName,text,date:td()});
+sd(SS,signals);document.getElementById("rs-tx").value="";
+rRadar();renderHome();renderIntel();
+}
+function dSig2(id){signals=signals.filter(s=>s.id!==id);sd(SS,signals);rRadar();renderHome();}
+function FM(m){activeFM=m;document.querySelectorAll("#pg-franz .chip").forEach(c=>c.classList.remove("on"));document.getElementById("fm-"+m).classList.add("on");}
+const FSYS="Du bist FRANZ in APOLLON (REFUdrive GmbH, George Iakovidis). Alt/Neu ZUERST. Immer. Thread → Kontext → Themen-Splitting → Fit → Auswertung → Aktion → Ablage.\nThemen-Splitting: CRM-relevant / follow-up-relevant / radar-relevant / nur archivieren.\nFormat EXAKT:\n===FRANZ===\nBETREFF: [x]\nMAIL-TYP: [x]\nTHREAD: [x]\nACCOUNT: [x]\nKONTAKT: [x]\nPHASE: [x]\n---THEMEN-SPLITTING---\nCRM-RELEVANT: [x]\nFOLLOW-UP: [x]\nRADAR-SIGNAL: [x]\nNUR ARCHIV: [x]\n---AUSWERTUNG---\nKERNBOTSCHAFT: [x]\nSENSIBILISIERUNG: [x]\nFIT: [x]\nDTR-STRATEGIE: [x]\n---ABLAGE---\nACTIVITY: [x]\nACCOUNT NOTE: [x]\nOPPORTUNITY: [x]\nTASK: [x]\nRADAR: [x]\nALERT: [x]\n---NÄCHSTE AKTION---\n[konkret]\n===ENDE===\nKurz. Direkt. Prosa.";
+function FD(){
+document.getElementById("f-sub").value="AW: Angebot OBC22K-850 / Liefertermin-Frage";
+document.getElementById("f-dt").value=td();
+document.getElementById("f-snd").value="Holger Schermbeck · Category Manager Einkauf · Sennebogen GmbH";
+document.getElementById("f-acc").value="Sennebogen GmbH";
+document.getElementById("f-ph").value="Angebot / Strategie aktiv";
+document.getElementById("f-body").value="Guten Tag Herr Iakovidis,\n\nvielen Dank für Ihr Angebot vom 08.05.2026 über 200 Einheiten OBC22K-850 zu EUR 3.985/Stück.\n\nFolgende Punkte sind noch offen:\n\n1. Liefertermin: 18 Monate ist zu lang. Wir benötigen die ersten 50 Einheiten bis Q1 2027.\n2. Kühlmittel-Freigabe: Unser Engineering hat noch keine schriftliche Freigabe erhalten.\n3. Wir sprechen parallel mit einem weiteren Anbieter. Entscheidung bis Ende Juni.\n\nMit freundlichen Grüßen\nHolger Schermbeck";
+document.getElementById("f-ctx").value="Bestandskunde. 4x OBC22K laufen bereits (88kW). Felix Kohnle (ex-REFUdrive) bei Stercom = Wettbewerb, kennt unsere Preise. Stercom testet Spätsommer.";
+FM("MAIL");
+}
+function FC(){["f-sub","f-snd","f-acc","f-body","f-ctx"].forEach(id=>document.getElementById(id).value="");document.getElementById("f-ph").value="";document.getElementById("f-dt").value=td();document.getElementById("franzOut").innerHTML='<div class="empty"><div class="empty-t">FRANZ BEREIT</div><div class="empty-s">Mail einfügen · Modus wählen · Verarbeiten</div></div>';document.getElementById("franzTs").textContent="Bereit";FM("MAIL");}
+async function RF(){
+const key=document.getElementById("apiKey").value.trim();if(!key){alert("API Key fehlt.");return;}
+const body=document.getElementById("f-body").value.trim();if(!body){alert("Mail-Inhalt fehlt.");return;}
+let msg=activeFM+":\n\n";
+const sub=document.getElementById("f-sub").value.trim(),sender=document.getElementById("f-snd").value.trim(),acc=document.getElementById("f-acc").value.trim(),date=document.getElementById("f-dt").value,phase=document.getElementById("f-ph").value,ctx=document.getElementById("f-ctx").value.trim();
+if(sub)msg+="BETREFF: "+sub+"\n";if(date)msg+="DATUM: "+date+"\n";if(sender)msg+="ABSENDER: "+sender+"\n";if(acc)msg+="ACCOUNT: "+acc+"\n";if(phase)msg+="PHASE: "+phase+"\n";
+msg+="\nMAIL-INHALT:\n"+body;if(ctx)msg+="\n\nKONTEXT:\n"+ctx;
+document.getElementById("franzBtn").disabled=true;document.getElementById("franzTs").textContent="Verarbeite …";
+document.getElementById("franzOut").innerHTML='<div class="empty"><div style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:11px;">FRANZ verarbeitet <div class="dots"><span></span><span></span><span></span></div></div></div>';
+try{
+  const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:2048,system:FSYS,messages:[{role:"user",content:msg}]})});
+  const d=await res.json();if(d.error)throw new Error(d.error.message);
+  rFranzOut(d.content[0].text);
+  document.getElementById("franzTs").textContent="Fertig · "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+}catch(err){document.getElementById("franzOut").innerHTML=`<div style="color:var(--red);padding:16px;font-size:12px;">Fehler: ${err.message}</div>`;document.getElementById("franzTs").textContent="Fehler";}
+document.getElementById("franzBtn").disabled=false;
+}
+function rFranzOut(raw){
+const g=k=>{const m=raw.match(new RegExp(k+":\\s*([^\n]+)"));return m?m[1].trim():"—";};
+const gb=k=>{const m=raw.match(new RegExp(k+":\\s*([\\s\\S]*?)(?=\n[A-ZÜÄÖ][A-ZÜÄÖ\\-\\/\\s]+:|---|===|$)"));return m?m[1].trim():"—";};
+const mT=g("MAIL-TYP"),accN=g("ACCOUNT"),ph=g("PHASE"),th=g("THREAD");
+const cR=gb("CRM-RELEVANT"),fR=gb("FOLLOW-UP"),raR=gb("RADAR-SIGNAL"),arR=gb("NUR ARCHIV");
+const kb=gb("KERNBOTSCHAFT"),se=gb("SENSIBILISIERUNG"),fi=gb("FIT"),dt=gb("DTR-STRATEGIE");
+const ac=gb("ACTIVITY"),an=gb("ACCOUNT NOTE"),op=gb("OPPORTUNITY"),ta=gb("TASK"),ra=gb("RADAR"),al=gb("ALERT");
+const nx=gb("NÄCHSTE AKTION");
+const hA=al!=="—"&&al.length>3,hS=se!=="—"&&se!=="Keine Auffälligkeit."&&se.length>5;
+let h="";
+h+=`<div class="ometa"><div class="obox"><div class="obox-l">MAIL-TYP</div><div class="obox-v">${esc(mT)}</div></div><div class="obox"><div class="obox-l">ACCOUNT</div><div class="obox-v">${esc(accN)}</div></div><div class="obox"><div class="obox-l">THREAD</div><div class="obox-v">${esc(th)}</div></div></div>`;
+if(hA)h+=`<div class="alert-box"><div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--red);margin-bottom:5px;">⚠ ALERT</div><div style="font-size:11px;color:#CCCCCC;">${esc(al)}</div></div>`;
+h+=`<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);margin-bottom:6px;">THEMEN-SPLITTING</div><div class="splits"><div class="scard crm"><div class="slbl crm">CRM-RELEVANT</div><div class="sbody">${esc(cR)}</div></div><div class="scard fu"><div class="slbl fu">FOLLOW-UP</div><div class="sbody">${esc(fR)}</div></div><div class="scard radar"><div class="slbl radar">RADAR-SIGNAL</div><div class="sbody">${esc(raR)}</div></div><div class="scard arch"><div class="slbl arch">NUR ARCHIV</div><div class="sbody">${esc(arR)}</div></div></div>`;
+h+=`<div class="osec"><div class="osec-t">KERNBOTSCHAFT</div><div class="osec-b">${esc(kb)}</div></div>`;
+if(hS)h+=`<div class="osec" style="border-left:2px solid var(--amber);"><div class="osec-t" style="color:var(--amber);">SENSIBILISIERUNG</div><div class="osec-b">${esc(se)}</div></div>`;
+h+=`<div class="osec"><div class="osec-t">FIT · DTR-STRATEGIE</div><div class="osec-b">${esc(fi)}\n\n${esc(dt)}</div></div>`;
+h+=`<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);margin-bottom:5px;">ABLAGE</div><div class="ablage"><div class="arow"><span class="atype activity">ACTIVITY</span><span class="aval">${esc(ac)}</span></div><div class="arow"><span class="atype accnote">ACCOUNT NOTE</span><span class="aval">${esc(an)}</span></div><div class="arow"><span class="atype oppo">OPPORTUNITY</span><span class="aval">${esc(op)}</span></div><div class="arow"><span class="atype task">TASK</span><span class="aval">${esc(ta)}</span></div><div class="arow"><span class="atype radar">RADAR</span><span class="aval">${esc(ra)}</span></div>${hA?`<div class="arow" style="border-left:2px solid var(--red);"><span class="atype alert">ALERT</span><span class="aval">${esc(al)}</span></div>`:""}</div>`;
+h+=`<div class="action-box"><div class="abox-t">NÄCHSTE AKTION</div><div class="abox-b">${esc(nx)}</div></div>`;
+function b64(s){try{return btoa(encodeURIComponent(s));}catch{return "";}}
+function cp(e){try{navigator.clipboard.writeText(decodeURIComponent(atob(e)));}catch(err){}}
+h+=`<div class="copy-bar"><button class="cpbtn" onclick="(${cp.toString()})('${b64([an,op,ta].join("\n\n"))}')">KOPIERE CRM</button><button class="cpbtn" onclick="(${cp.toString()})('${b64(ta)}')">TASK</button><button class="cpbtn" onclick="(${cp.toString()})('${b64(raR+"\n"+ra)}')">RADAR</button><button class="cpbtn" onclick="(${cp.toString()})('${b64(raw)}')">ALLES</button></div>`;
+document.getElementById("franzOut").innerHTML=h;
+}
+// PORTFOLIO
+const PORT={segments:[
+{id:"bus",n:"Bus / Stadtverkehr",prods:["RPCS 730-150K","OBC-22K","AFE-220"]},
+{id:"truck",n:"Truck / Nutzfahrzeug",prods:["RPCS 730-150K","OBC-22K","Auxiliary 2x28K"]},
+{id:"bau",n:"Baumaschine / Off-Highway",prods:["RPCS 730-320K","OBC-22K","RPCS 790 DC/DC"]},
+{id:"kommunal",n:"Kommunalfahrzeug / ePTO",prods:["RPCS 730-80K","Combi 17K-28K","OBC-22K"]},
+{id:"agri",n:"Agri / Landmaschine",prods:["RPCS 730-150K","RPCS 790 DC/DC","OBC-22K"]},
+{id:"industry",n:"Industrie / Hafen / Mining",prods:["RPCS 730-320K","AFE-220","RPCS 790 DC/DC"]},
+]};
+const PRODS={
+"RPCS 730-150K":{sub:"Traktionsinverter 150kW",specs:"150kW | SiC 99% | 300-850V DC | IP67 | -25..+85°C kein Derating | 2 Wochen IBN",comp:"ISO 9001 | CE | ECE R10 | KBA",vs:"vs Dana TM4: 2 Wo. vs 35 Wo. | vs CN-Player: KBA vs kein KBA",einwand:"Zu teuer → TCO: 25.000 EUR Strom gespart/5J | Unbekannt → ISO 9001 + TÜV SÜD + KBA",nutzen:"Kein Derating | Schnellste IBN im Markt | EU-Förderung gesichert"},
+"RPCS 730-320K":{sub:"Traktionsinverter 320kW",specs:"320kW | SiC 99% | 1200A Peak | IP67/IP6K9K | -25..+85°C kein Derating",comp:"ISO 9001 | CE | IEC 61800",vs:"Einziger EU-Anbieter mit >250kW für Off-Highway",einwand:"Zu gross → kompakte Version auf Anfrage | Kühlung → Flüssig Pflicht",nutzen:"Vollständigstes Portfolio bis 320kW für Off-Highway in EU"},
+"OBC-22K":{sub:"OnBoard Charger 22kW",specs:"22kW AC | DC 550-850V | SiC | IP6K9K | SAE J1939 | Parallel bis 8x = 176kW",comp:"CE | KBA | ISO 16750 | IEC 62196",vs:"Parallel-Funktion einzigartig | 850V + SAE J1939 selten im Markt",einwand:"Warum AC? → AC = Netzintegration + V2G via AFE | Preis → 200 Stück EUR 3.985",nutzen:"Skalierbar von 22kW bis 176kW | Einzige Lösung dieser Klasse"},
+"RPCS 790 DC/DC":{sub:"DC/DC Converter 3-6kW",specs:"3/4/6kW | bis 900V | IP67 | AEC-qualifiziert | -40..+85°C",comp:"CE | AEC-Q100/Q101",vs:"AEC-Qualifikation selten | Direkte Temperaturstabilität",einwand:"Eigene Entwicklung → 18 Monate vs 2 Wochen bei uns",nutzen:"AEC-qualifiziert für Automotive-Grade"},
+"AFE-220":{sub:"Active Frontend Charger V2G",specs:"bis 220kW | V2G bidirektional | IP68 | industriell",comp:"CE | IEC 62196",vs:"Sehr wenige Anbieter mit bidirektional 220kW",einwand:"V2G kein Standard → Förderprogramme ab 2026",nutzen:"Schnellladen + V2G + Netzintegration in einem"},
+"Auxiliary 2x28K":{sub:"Hilfsantrieb Inverter",specs:"2x 28kW | Nebenaggregate | Klimakompressor Servolenkung Bremsen",comp:"CE | ISO 9001",vs:"Systemkompetenz: alles aus einer Hand",nutzen:"Vollständiges eDrive-Portfolio von REFUdrive"},
+"Combi 17K-28K":{sub:"ePTO Kombiniverter Kommunal",specs:"17-28kW | ePTO | ein- und dreiphasig | kompakt",comp:"CE",vs:"Nischenprodukt für Kommunal-ePTO",einwand:"Sonderlösung → Referenzen bei Haller und Faun",nutzen:"Einzige kompakte ePTO-Lösung für Kommunal bis 28kW"},
+"RPCS 730-80K":{sub:"Traktionsinverter 80kW",specs:"80kW | SiC | 300-850V | IP67 | -25..+85°C kein Derating",comp:"ISO 9001 | CE",vs:"Kleinster Inverter im REFUdrive Portfolio",nutzen:"Für kompakte Kommunal- und Stadtfahrzeuge"},
+};
+let portSeg=null,portProd=null;
+function initPortfolio(){renderPortNav();}
+function pReset(){portSeg=null;portProd=null;renderPortNav();renderPort();}
+function renderPortNav(){
+document.getElementById("portNav").innerHTML=PORT.segments.map(s=>`<div class="pcat${portSeg===s.id?" on":""}" onclick="pSel('${s.id}')">${s.n}</div>`).join("");
+}
+function pSel(id){portSeg=id;portProd=null;renderPortNav();renderPort();const seg=PORT.segments.find(s=>s.id===id);document.getElementById("portBC").innerHTML=`<span class="bc-i" onclick="pReset()">Segment</span><span class="bc-sep">›</span><span class="bc-i on">${seg.n}</span>`;}
+function pSelProd(name){portProd=name;renderPort();const seg=PORT.segments.find(s=>s.id===portSeg);document.getElementById("portBC").innerHTML=`<span class="bc-i" onclick="pReset()">Segment</span><span class="bc-sep">›</span><span class="bc-i" onclick="pSel('${portSeg}')">${seg.n}</span><span class="bc-sep">›</span><span class="bc-i on">${name}</span>`;}
+function renderPort(){
+const det=document.getElementById("portDet");
+if(!portSeg){det.innerHTML="<div style='padding:18px;color:var(--dim);font-size:11px;'>Segment aus der Navigation wählen.</div>";return;}
+const seg=PORT.segments.find(s=>s.id===portSeg);
+if(!portProd){
+  det.innerHTML=`<div style="font-size:15px;font-weight:800;margin-bottom:4px;">${seg.n}</div><div style="font-size:10px;color:var(--dim);margin-bottom:14px;">Produkt für Details auswählen</div><div class="prod-grid">${seg.prods.map(p=>{const pr=PRODS[p]||{sub:"",specs:""};return`<div class="prod-card" onclick="pSelProd('${p}')"><div class="prod-name">${esc(p)}</div><div class="prod-sub">${esc(pr.sub)}</div><div class="prod-specs">${esc((pr.specs||"").split(" | ").slice(0,3).join(" | "))}</div><div class="prod-tags"><span class="pt pt-g">EU-Zertifiziert</span><span class="pt pt-b">SiC</span></div></div>`;}).join("")}</div>`;
+  return;
+}
+const pr=PRODS[portProd]||{};
+det.innerHTML=`<div style="font-size:18px;font-weight:800;margin-bottom:3px;">${esc(portProd)}</div><div style="font-size:11px;color:var(--dim);margin-bottom:14px;">${esc(pr.sub||"")}</div>
+<div class="g2" style="margin-bottom:12px;">
+  <div class="sc"><div class="sc-t">TECHNISCHE SPECS</div><div style="font-size:11px;line-height:1.8;color:#CCCCCC;">${esc(pr.specs||"—").split(" | ").join("<br>")}</div></div>
+  <div class="sc"><div class="sc-t">COMPLIANCE</div><div style="font-size:11px;line-height:1.8;color:#CCCCCC;">${esc(pr.comp||"—").split(" | ").join("<br>")}</div></div>
+</div>
+<div class="sc" style="margin-bottom:10px;"><div class="sc-t">VS WETTBEWERB</div><div style="font-size:11px;line-height:1.8;color:#CCCCCC;">${esc(pr.vs||"—").split(" | ").join("<br>")}</div></div>
+<div class="g2" style="margin-bottom:10px;">
+  <div class="sc"><div class="sc-t">EINWAND &amp; ANTWORT</div><div style="font-size:11px;line-height:1.8;color:#CCCCCC;">${esc(pr.einwand||"—").split(" | ").join("<br>")}</div></div>
+  <div class="sc"><div class="sc-t">NUTZEN / KILLER-ARGUMENTE</div><div style="font-size:11px;line-height:1.8;color:#CCCCCC;">${esc(pr.nutzen||"—").split(" | ").join("<br>")}</div></div>
+</div>
+<div style="margin-top:8px;"><button class="btn p" onclick="SC('MEETING');document.getElementById('chatIn').value='Produktbriefing für Meeting: ${portProd}\\nFür welchen Kunden und welches Gespräch?';G('pentagon')">IN PENTAGON NUTZEN</button></div>`;
+}
+// KNOWLEDGE BASE
+const KBD={
+"Produkte":[
+  {t:"RPCS 730 Traktionsinverter",sub:"80-320kW | SiC | kein Derating",d:{Funktion:"Kernprodukt. Wandelt Batterie-DC in E-Motor-AC.",Nutzen:"Kein Derating bis +85°C. SiC bis 99% Effizienz. IBN 2 Wochen.",Grenzen:"Max 320kW. Flüssigkühlung Pflicht.",Compliance:"ISO 9001, CE, ECE R10, KBA.",Pricing:"Auf Anfrage. Volumenrabatt ab 50 Stück.",Wettbewerb:"Dana TM4 (35 Wochen), Danfoss (Marine), CN (Förderrisiko).",Anwendung:"Derating-Killersatz: 'Im August vollbeladen Südschwarzwald — kein Derating. Was habt ihr?'"}},
+  {t:"OBC-22K OnBoard Charger",sub:"22kW | 850V | Parallel bis 176kW",d:{Funktion:"AC-Laden on-board. Wandelt Ladesäulen-AC in Batterie-DC.",Nutzen:"Parallel bis 8x = 176kW. SAE J1939. IP6K9K.",Grenzen:"AC only. Für DC-Schnellladen: AFE-220.",Compliance:"CE, KBA, ISO 16750, IEC 62196.",Pricing:"EUR 3.985-5.200 je Menge.",Wettbewerb:"Kaum Konkurrenz bei 850V + SAE J1939 + Parallelschaltung.",Anwendung:"Sennebogen: 200 Stück, Parallelschaltung als flexibles Ladekonzept."}},
+],
+"Compliance":[
+  {t:"ISO 9001 + KBA-Zertifikat",sub:"Pflicht für OEM-Ausschreibungen | bis 04.01.2027",d:{Bedeutung:"Pflicht für OEM-Ausschreibungen und EU-Förderprogramme.",Nutzen:"CN-Player ausgeschlossen. REFUdrive qualifiziert.",Limits:"Kein Produktzertifikat — nur Prozess.",Anwendung:"In JEDEM Gespräch wo CN-Wettbewerb im Raum ist aktiv einsetzen."}},
+  {t:"80% Bundesförderung",sub:"Nur mit KBA-Zertifikat | CN-Player ausgeschlossen",d:{Funktion:"Förderprogramm für elektrische NFZ-Komponenten.",KillerArgument:"CN-Inverter gefährdet 80% Förderung. REFUdrive ist der Safe Bet.",Nutzen:"Preisdifferenz gegenüber CN in der Förderung aufgefressen.",Anwendung:"Sofort wenn CN oder Preis angesprochen wird."}},
+],
+"Wettbewerb":[
+  {t:"Dana TM4",sub:"HIGH | US | 35 Wochen | Mindestmengen",d:{Schwäche:"35 Wochen Lieferzeit. Mindestmengen. Kein lokaler Support.",Killersatz:"Dana liefert in 35 Wochen. Wie viele Aufträge verliert ihr in dieser Zeit?",Anwendung:"Immer IBN-Vorteil 2 Wochen vs 35 Wochen dagegen setzen."}},
+  {t:"CN-Player",sub:"HIGH | Preis | kein EU-Support | Förderrisiko",d:{Schwäche:"Kein ISO 9001. Kein KBA. Gefährdet 80% Bundesförderung.",Killersatz:"CN-Inverter gefährden die 80% Bundesförderung. REFUdrive ist der Safe Bet.",Anwendung:"Sofort wenn CN im Gespräch ist: Förderrisiko als Killer einsetzen."}},
+],
+"Einwände":[
+  {t:"Zu teuer",sub:"Preiseinwand → TCO-Antwort",d:{Antwort:"TCO über 5 Jahre zeigen: 25.000 EUR Stromkosteneinsparung durch SiC. Amortisation ~3 Jahre.",Nie:"Nie Listenpreis diskutieren. Immer TCO.",Anwendung:"Sofort TCO-Rechnung aufmachen. Vergleichszahl: 12.000 EUR Depotstillstand pro Monat."}},
+  {t:"Unbekannte Marke",sub:"Vertrauen → Zertifikate-Antwort",d:{Antwort:"ISO 9001, ISO 50001, KBA, TÜV SÜD. JV mit PRETTL Group (40 Jahre Auto) + Bharat Forge (Top-10 Schmied weltweit).",Anwendung:"Zertifikate zeigen. PRETTL-Background erklären. 2-Wochen-IBN als Beweis."}},
+  {t:"Lieferzeit zu lang",sub:"18 Monate → Referenzantwort",d:{Antwort:"200 Einheiten, qualifizierter Lieferant, EU-Compliance — 18 Monate ist Realität im Markt. Dana macht 35.",Tipp:"Teillieferung als Kompromiss anbieten. 50 Einheiten Q1 2027 als Einstieg."}},
+],
+"Playbooks":[
+  {t:"OEM-Erstgespräch",sub:"Erster Kontakt mit Engineering Manager",d:{Reihenfolge:"1. Schmerzpunkt hören. 2. Architektur-Fragen. 3. REFUdrive-Fit prüfen. 4. Nächster Schritt.",Nie:"Nie über Preis in Gespräch 1. Nie lange Präsentation.",Anwendung:"Offene Fragen: Welche Architektur? Wer entscheidet? Was kostet die aktuelle Lösung?"}},
+  {t:"CHRISI-Report",sub:"5-Zeiler für Christian Oehring | jeden Freitag",d:{Format:"1. Was gemacht. 2. Signale gefunden. 3. Kontakte angesprochen. 4. Was kommt. 5. Was ich brauche.",Prinzip:"Max 5 Zeilen. Kein Roman. Lösungen — keine Fragen.",Anwendung:"Jeden Freitag. Kurz. Klar. Sichtbar liefern."}},
+]
+};
+let kbCat="Produkte",kbSearch="";
+function initKB(){renderKBCats();renderKB();}
+function renderKBCats(){
+document.getElementById("kbCats").innerHTML=Object.keys(KBD).map(c=>`<div class="kb-cat${kbCat===c?" on":""}" onclick="kbSel('${c}')">${c}<span class="kb-cnt">${KBD[c].length}</span></div>`).join("");
+}
+function kbSel(c){kbCat=c;kbSearch="";document.getElementById("kbSrch").value="";renderKBCats();renderKB();}
+function KBS(){kbSearch=document.getElementById("kbSrch").value.toLowerCase();renderKB();}
+function renderKB(){
+let items=KBD[kbCat]||[];
+if(kbSearch)items=Object.values(KBD).flat().filter(i=>i.t.toLowerCase().includes(kbSearch)||i.sub.toLowerCase().includes(kbSearch));
+document.getElementById("kbFeed").innerHTML=items.map((item,idx)=>`
+  <div class="kb-item" id="kbi-${idx}" onclick="togKB(${idx})">
+    <div class="kb-it">${esc(item.t)}<span class="kb-arr">›</span></div>
+    <div class="kb-is">${esc(item.sub)}</div>
+    <div class="kb-det">
+      ${Object.entries(item.d||{}).map(([k,v])=>`<div class="kb-f"><div class="kb-fl">${esc(k)}</div><div class="kb-fv">${esc(v)}</div></div>`).join("")}
+      <div style="margin-top:8px;"><button class="btn s p" onclick="event.stopPropagation();SC('MEETING');document.getElementById('chatIn').value='Knowledge Pull: ${esc(item.t)}\\nFür welchen Account?';G('pentagon')">IN PENTAGON</button></div>
+    </div>
+  </div>`).join("");
+}
+function togKB(idx){const el=document.getElementById("kbi-"+idx);el.classList.toggle("kb-open");}
+// TASKS
+function updTSel(){const el=document.getElementById("t-acc");if(!el)return;el.innerHTML="<option value=''>— Account —</option>"+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join("");}
+function updSel(){updTSel();updISel();updRSel();}
+function AT(){
+const text=document.getElementById("t-text").value.trim();if(!text)return;
+const accId=document.getElementById("t-acc").value,accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
+tasks.push({id:uid(),text,acc:accName,accId,prio:document.getElementById("t-prio").value,due:document.getElementById("t-due").value,done:false});
+sd(ST,tasks);document.getElementById("t-text").value="";renderTasks();renderHome();
+}
+function renderTasks(){
+updTSel();
+["high","med","low"].forEach(p=>{
+  const el=document.getElementById("tasks-"+p),list=tasks.filter(t=>t.prio===p);
+  if(!list.length){el.innerHTML="<div style='font-size:10px;color:var(--dim);margin-bottom:6px;'>Keine Tasks.</div>";return;}
+  el.innerHTML=list.map(t=>`<div class="task-item ${t.prio}${t.done?" di":""}">
+    <div class="tck" onclick="togT('${t.id}')">${t.done?"✓":""}</div>
+    <span class="tt${t.done?" done":""}">${esc(t.text)}</span>
+    <div class="tmeta">${t.due?`<span class="tdue${t.due<td()?" od":""}">${t.due}</span>`:""}<span>${esc(t.acc||"")}</span></div>
+    <button class="tdel" onclick="delT('${t.id}')">✕</button>
+  </div>`).join("");
+});
+}
+function togT(id){const i=tasks.findIndex(t=>t.id===id);tasks[i].done=!tasks[i].done;sd(ST,tasks);renderTasks();renderHome();}
+function delT(id){tasks=tasks.filter(t=>t.id!==id);sd(ST,tasks);renderTasks();}
+function clearDone(){tasks=tasks.filter(t=>!t.done);sd(ST,tasks);renderTasks();}
+// SEED
+function mkA(co,cat,ph,pr,op,seg,prod,notes,cn,ct,vol,fud,fut,dos,donts){
+const a={id:uid(),company:co,cat,phase:ph,prio:pr,op,seg,source:"Bestand",product:prod,volume:vol||"",sop:"",nre:"",dos:dos||"",donts:donts||"",notes:notes||"",fudate:fud||"",futext:fut||"",contacts:[],log:[]};
+if(cn)a.contacts.push({id:uid(),name:cn,title:ct,role:"Entscheider"});
+if(notes)a.log.push({id:uid(),type:"NOTE",date:td(),text:notes});
+return a;
+}
+function seed(){
+accounts=[
+  mkA("Sennebogen Maschinentechnik","Sales aktiv","Angebot / Strategie aktiv","P1","A","Bau","OBC22K-850 · 200 Einheiten","4x OBC22K laufen bereits (88kW). Angebot EUR 3.985/Stück = EUR 797k. Stercom/Felix Kohnle = Wettbewerb. Kühlmittel-Freigabe offen.","Holger Schermbeck","Category Manager Einkauf","200 Stück · EUR 797k","","Kühlmittel-Freigabe Status klären","Josef Müller ist technischer Entscheider. Bestandskunde.","Nie Rabatt ohne Gegenleistung. Felix Kohnle kennt unsere Preise."),
+  mkA("Mecalac France S.A.S","Sales aktiv","qualifiziert","P1","A","Bau","OBC22K-850 + RPCS790 DC/DC","10 OBC22K-850 in e12 seit 2019. eMDX + eS1000 neue Plattformen. DCDC-Lücke = Opportunity.","Thomas Schäp","Responsable Technologies","","","RFQ für DC/DC RPCS790 anfragen","Thomas Schäp = Tech-Entscheider. Seit 2019 Bestandskunde.","Warum Umsatz 0 zwischen 2019-2025 nicht anklagend thematisieren."),
+  mkA("Ford Otosan","ePTO Ansatz","Entscheider identifiziert","P1","A","Truck","ePTO RPCS730-28K","Türkischer LKW-Hersteller. Ford-JV. Großes Volumen möglich.","","","","","Engineering Manager identifizieren","",""),
+  mkA("JohnDeere RFI DCAC","New Opportunities","technisch geprueft","P1","A","Agri","RPCS730 + DC/DC","RFI erhalten. NRW Opportunities. Sofort qualifizieren.","","","","","RFI Antwort vorbereiten. Wer hat geschickt?","Starkes Signal — sofort handeln.",""),
+  mkA("Krone","ePTO Ansatz","qualifiziert","P1","B","Truck","ePTO RPCS730-28K","Trailer-Hersteller DE. Kühlauflieger ePTO = starker Fit.","","","","","","",""),
+  mkA("Rosenbauer","ePTO Ansatz","qualifiziert","P1","B","Kommunal","ePTO + OBC22K","Feuerwehrfahrzeuge. ePTO für Pumpenantrieb. Österreich.","","","","","","",""),
+  mkA("VolvoCE Engineering Solutions","New Opportunities","Signal erkannt","P1","B","Bau","RPCS730 + OBC22K","Große Elektrifizierungsoffensive. Einstieg über R&D.","","","","","Engineering LinkedIn Outreach","",""),
+  mkA("EvoBus (Daimler Buses)","Pipeline Target","Signal erkannt","P1","B","Bus","RPCS730 + OBC22K","Neu-Ulm. Engineering Powertrain direkt ansprechen.","","","","","LinkedIn Engineering Manager Neu-Ulm","Direkt Engineering — nicht Zentraleinkauf Stuttgart.","Nicht über Zentraleinkauf Stuttgart."),
+  mkA("Faun","Pipeline Target","Signal erkannt","P1","B","Kommunal","RPCS730 + ePTO","Kommunalfahrzeuge. Müllwagen Elektrifizierung.","","","","","","",""),
+  mkA("Haller GmbH","Pipeline Target","Signal erkannt","P1","B","Kommunal","RPCS730 + ePTO + OBC","Tuttlingen. EUR 10-18M Potenzial. Pepper Motion beobachten.","","","","","","",""),
+  mkA("MAN Truck & Bus","Pipeline Target","Signal erkannt","P1","D","Truck","RPCS730 Serie","Großes Volumen. Langer Zyklus. Einstieg über Innovation Hub.","","","","","","Direkt Engineering — nicht Einkauf.",""),
+  mkA("Liebherr Group","Pipeline Target","Signal erkannt","P1","D","Bau","RPCS730 Construction","Biberach. SiC-Argument stark.","","","","","","",""),
+  mkA("Voltrac","Sales aktiv","Signal erkannt","P2","B","Bau","OBC / Inverter","Status und Details klären.","","","","","","",""),
+  mkA("Parker Hannifin AB","Sales aktiv","Signal erkannt","P2","B","Industry","Hilfsantriebe / ePTO","Schweden. Hydraulik-DNA.","","","","","","",""),
+  mkA("Sandvik Mining","Sales aktiv","Signal erkannt","P2","C","Industry","RPCS730 + AFE","Mining. AFE für Tunneling relevant.","","","","","","",""),
+  mkA("Lamberet","ePTO Ansatz","Signal erkannt","P2","C","Truck","ePTO RPCS730-28K","Kühlauflieger Frankreich.","","","","","","",""),
+  mkA("Chereau","ePTO Ansatz","Signal erkannt","P2","C","Truck","ePTO RPCS730-28K","Kühlauflieger Frankreich.","","","","","","",""),
+  mkA("BMC Turkey","New Opportunities","Signal erkannt","P2","D","Truck","OBC22K + RPCS730","Türkischer Bus/LKW-Hersteller.","","","","","","",""),
+  mkA("IVECO","New Opportunities","technisch geprueft","P2","C","Truck","OBC (historisch)","3 Jahre Hin-und-Her. Frisch anfangen. Euro 7 OBM Aufhänger.","","","","","Neuer Kontakt Turin suchen","Frisch anfangen — unbelastet.","Alte Geschichte nicht aufwärmen."),
+  mkA("Palfinger AG","Pipeline Target","Signal erkannt","P2","C","Truck","RPCS730 + ePTO","Ladekrane. Hebebühnen.","","","","","","",""),
+  mkA("Solaris Bus & Coach","Pipeline Target","Signal erkannt","P2","C","Bus","RPCS730 + OBC","Elektrobus-Pionier Polen.","","","","","","",""),
+  mkA("Manitou Group","Pipeline Target","Entscheider identifiziert","P1","A","Bau","OBC22K + ePTO + RPCS730","NEUER CEO: Sylvain Blaise ab 30. Juni 2026. Ex-FPT Industrial / Iveco Powertrain. 20+ Jahre CNH. Kennt Antriebssysteme. Evaluation Cycles werden neu gesetzt. 30-Tage-Fenster offen.","Sylvain Blaise","President & CEO (ab 30. Juni 2026)","","2026-07-15","Erstkontakt Sylvain Blaise nach Amtsantritt. Powertrain-Background ansprechen.","Powertrain-Mann. Spricht unsere Sprache. FPT Industrial = kennt SiC.","Nicht vor 15. Juli kontaktieren. Er muss erst ankommen."),
+  mkA("Merlo","Pipeline Target","Signal erkannt","P2","D","Bau","OBC22K + ePTO","Teleskoplader Italien.","","","","","","",""),
+  mkA("Tirsan","ePTO Ansatz","Signal erkannt","P2","D","Truck","ePTO","Türkischer Trailer-Hersteller.","","","","","","",""),
+  mkA("Bibus Hydraulik AG","Sales aktiv","Signal erkannt","P3","D","Industry","Hilfsantriebe","Hydraulik-Distributor Schweiz.","","","","","","",""),
+  mkA("CAT (Caterpillar)","Pipeline Target","Signal erkannt","P3","D","Bau","RPCS730 + OBC","Off-Highway. Langer Design-In Prozess.","","","","","","",""),
+  mkA("Magni","Pipeline Target","Signal erkannt","P3","D","Bau","OBC22K","Teleskoplader Italien.","","","","","","",""),
+  mkA("JCB","Pipeline Target","Signal erkannt","P1","A","Bau","RPCS730 + OBC22K","EV-Produkte bereits beim Kunden. 100+ Einheiten im Markt. Supply Chain unter Druck. Sofortiger Bedarf.","","","","","Engineering Powertrain Kontakt suchen","EV already in customer hands = supply chain pressure NOW.",""),
+];
+sd(SK,accounts);
+}
+// Aliases for console use
+window.renderALL = function(){renderAll();};
+window.RESET = function(){resetData();};
+window.LOAD = function(){seed();sd(SK,accounts);renderAll();alert(accounts.length+" Accounts geladen!");};
+
+// INPUT CENTER
+const INP_SYS = "Du bist der INPUT-VERARBEITER von APOLLON. Analysiere den rohen Input und liefere eine strukturierte Auswertung.\n\nACCOUNT ERKENNUNG: Erkenne automatisch um welches Unternehmen es geht (Sennebogen, Manitou, Mecalac etc.).\n\nTYP ERKENNUNG: Erkenne automatisch ob es eine E-Mail, Meeting-Notiz, Anruf-Protokoll, LinkedIn-Profil oder Dokument ist.\n\nAusgabe EXAKT in diesem Format:\n===INPUT ANALYSE===\nTYP: [E-Mail / Meeting / Anruf / LinkedIn / Dokument / Notiz]\nACCOUNT: [Firmenname oder UNBEKANNT]\nKONTAKT: [Name, Funktion wenn erkennbar]\nDATUM: [Datum wenn erkennbar oder HEUTE]\nSPRACHE: [DE / EN / FR / andere]\n---KERNINHALT---\n[Was steht wirklich drin? 2-3 Saetze. Kein Copy-Paste - eigene Worte.]\n---THEMEN SPLITTING---\nCRM-RELEVANT: [Was gehoert in die Account-Historie?]\nFOLLOW-UP: [Was braucht eine Reaktion? Bis wann?]\nSIGNAL: [Was ist ein Markt- oder Verkaufssignal?]\nNUR ARCHIV: [Was ist nur zur Dokumentation?]\n---SENSIBILISIERUNG---\n[Risiken, politische Dynamik, versteckte Botschaften, Warnsignale - max 2 Saetze]\n---NAECHSTE AKTION---\n[Konkret. Was. Wer. Wann. Kanal.]\n===ENDE===\nKurz. Direkt. Prosa. Keine Bulletpoints.";
+
+async function processInput(){
+const key=document.getElementById("apiKey").value.trim();
+if(!key){alert("API Key fehlt.");return;}
+const raw=document.getElementById("inp-raw").value.trim();
+if(!raw){alert("Bitte erst Input eingeben.");return;}
+const accId=document.getElementById("inp-acc").value;
+const accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
+const typ=document.getElementById("inp-type").value;
+
+document.getElementById("inp-btn").disabled=true;
+document.getElementById("inp-ts").textContent="Verarbeite...";
+document.getElementById("inp-out").innerHTML='<div class="empty"><div style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:11px;">APOLLON analysiert <div class="dots"><span></span><span></span><span></span></div></div></div>';
+
+let msg=raw;
+if(accName)msg="ACCOUNT KONTEXT: "+accName+"\n\n"+msg;
+if(typ!=="AUTO")msg="TYP: "+typ+"\n\n"+msg;
+
+try{
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:1500,system:INP_SYS,messages:[{role:"user",content:msg}]})
+  });
+  const d=await res.json();
+  if(d.error)throw new Error(d.error.message);
+  const reply=d.content[0].text;
+  renderInputOutput(reply,accId);
+  document.getElementById("inp-ts").textContent="Fertig - "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
+  document.getElementById("inp-actions").style.display="block";
+  // Store last result for saving
+  window._lastInpResult={text:reply,accId,accName,raw};
+}catch(err){
+  document.getElementById("inp-out").innerHTML='<div style="color:var(--red);padding:14px;font-size:12px;">Fehler: '+err.message+'</div>';
+  document.getElementById("inp-ts").textContent="Fehler";
+}
+document.getElementById("inp-btn").disabled=false;
+}
+
+function renderInputOutput(raw,accId){
+const g=(k)=>{const m=raw.match(new RegExp(k+":\\s*([^\n]+)"));return m?m[1].trim():"-";};
+const gb=(k)=>{const m=raw.match(new RegExp(k+":\\s*([\\s\\S]*?)(?=\\n[A-Z][A-Z\\-\\/\\s]+:|---|===|$)"));return m?m[1].trim():"-";};
+
+const typ=g("TYP"),acc=g("ACCOUNT"),kontakt=g("KONTAKT"),datum=g("DATUM");
+const kern=gb("KERNINHALT"),crm=gb("CRM-RELEVANT"),fu=gb("FOLLOW-UP"),sig=gb("SIGNAL"),arch=gb("NUR ARCHIV");
+const sensi=gb("SENSIBILISIERUNG"),action=gb("NAECHSTE AKTION");
+
+let h="";
+// Meta
+h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;">';
+h+='<div class="dkv"><div class="dkv-l">TYP</div><div class="dkv-v">'+esc(typ)+'</div></div>';
+h+='<div class="dkv"><div class="dkv-l">ACCOUNT</div><div class="dkv-v">'+esc(acc)+'</div></div>';
+h+='<div class="dkv"><div class="dkv-l">KONTAKT</div><div class="dkv-v">'+esc(kontakt)+'</div></div>';
+h+='<div class="dkv"><div class="dkv-l">DATUM</div><div class="dkv-v">'+esc(datum)+'</div></div>';
+h+='</div>';
+
+// Kerninhalt
+h+='<div class="osec"><div class="osec-t">KERNINHALT</div><div class="osec-b">'+esc(kern)+'</div></div>';
+
+// Splitting
+h+='<div style="font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);margin-bottom:5px;margin-top:2px;">THEMEN SPLITTING</div>';
+h+='<div class="splits" style="margin-bottom:9px;">';
+h+='<div class="scard crm"><div class="slbl crm">CRM-RELEVANT</div><div class="sbody">'+esc(crm)+'</div></div>';
+h+='<div class="scard fu"><div class="slbl fu">FOLLOW-UP</div><div class="sbody">'+esc(fu)+'</div></div>';
+h+='<div class="scard radar"><div class="slbl radar">SIGNAL</div><div class="sbody">'+esc(sig)+'</div></div>';
+h+='<div class="scard arch"><div class="slbl arch">NUR ARCHIV</div><div class="sbody">'+esc(arch)+'</div></div>';
+h+='</div>';
+
+// Sensibilisierung
+if(sensi&&sensi!=="-"&&sensi.length>5){
+  h+='<div class="osec" style="border-left:2px solid var(--amber);"><div class="osec-t" style="color:var(--amber);">SENSIBILISIERUNG</div><div class="osec-b">'+esc(sensi)+'</div></div>';
+}
+
+// Aktion
+h+='<div class="action-box"><div class="abox-t">NAECHSTE AKTION</div><div class="abox-b">'+esc(action)+'</div></div>';
+
+document.getElementById("inp-out").innerHTML=h;
+}
+
+function saveToAccount(){
+if(!window._lastInpResult)return;
+const {text,accId,accName,raw}=window._lastInpResult;
+if(!accId){
+  const name=prompt("Account-Name eingeben:");
+  if(!name)return;
+  // Find account
+  const a=accounts.find(x=>x.company.toLowerCase().includes(name.toLowerCase()));
+  if(!a){alert("Account nicht gefunden.");return;}
+  doSaveToAccount(a.id,text,raw);
+} else {
+  doSaveToAccount(accId,text,raw);
+}
+}
+
+function doSaveToAccount(id,analysis,raw){
+const i=accounts.findIndex(a=>a.id===id);
+if(i<0)return;
+if(!accounts[i].log)accounts[i].log=[];
+accounts[i].log.push({id:uid(),type:"EMAIL",date:td(),text:raw.slice(0,200)+"..."});
+sd(SK,accounts);
+alert("Gespeichert in "+accounts[i].company);
+G("accounts");SA(id);
+}
+
+function updInputSel(){
+const el=document.getElementById("inp-acc");
+if(!el)return;
+el.innerHTML='<option value="">— Account (optional) —</option>'+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join("");
+}
+
+
+// KALENDER
+function saveKal(){sd(KS,kalEvents);}
+
+function addKalEvent(){
+const date=document.getElementById("kev-date").value;
+const title=document.getElementById("kev-title").value.trim();
+if(!date||!title){alert("Datum und Titel sind Pflicht.");return;}
+const accId=document.getElementById("kev-acc").value;
+const accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
+kalEvents.push({
+  id:uid(),date,time:document.getElementById("kev-time").value,
+  title,accId,accName,type:document.getElementById("kev-type").value,
+  note:document.getElementById("kev-note").value
+});
+kalEvents.sort((a,b)=>a.date.localeCompare(b.date));
+saveKal();
+document.getElementById("kev-title").value="";
+document.getElementById("kev-note").value="";
+renderKal();
+renderHome();
+}
+
+function delKalEvent(id){
+kalEvents=kalEvents.filter(e=>e.id!==id);
+saveKal();renderKal();renderHome();
+}
+
+function kalPrev(){kalMonth--;if(kalMonth<0){kalMonth=11;kalYear--;}renderKal();}
+function kalNext(){kalMonth++;if(kalMonth>11){kalMonth=0;kalYear++;}renderKal();}
+
+function renderKal(){
+if(!document.getElementById("kal-grid"))return;
+const mn=["Januar","Februar","Maerz","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+document.getElementById("kal-month").textContent=mn[kalMonth]+" "+kalYear;
+
+const today=td();
+const firstDay=new Date(kalYear,kalMonth,1).getDay();
+const daysInMonth=new Date(kalYear,kalMonth+1,0).getDate();
+const start=firstDay===0?6:firstDay-1;
+
+let grid='<div style="color:var(--muted);font-weight:700;">Mo</div><div style="color:var(--muted);font-weight:700;">Di</div><div style="color:var(--muted);font-weight:700;">Mi</div><div style="color:var(--muted);font-weight:700;">Do</div><div style="color:var(--muted);font-weight:700;">Fr</div><div style="color:var(--muted);font-weight:700;">Sa</div><div style="color:var(--muted);font-weight:700;">So</div>';
+for(let i=0;i<start;i++)grid+='<div></div>';
+for(let d=1;d<=daysInMonth;d++){
+  const dateStr=kalYear+"-"+(String(kalMonth+1).padStart(2,"0"))+"-"+(String(d).padStart(2,"0"));
+  const hasEvent=kalEvents.some(e=>e.date===dateStr);
+  const isToday=dateStr===today;
+  let style="padding:3px 2px;cursor:pointer;border-radius:2px;";
+  if(isToday)style+="background:var(--red);color:#fff;font-weight:700;";
+  else if(hasEvent)style+="color:var(--amber);font-weight:700;";
+  grid+=`<div style="${style}" onclick="kalSelectDay('${dateStr}')">${d}</div>`;
+}
+document.getElementById("kal-grid").innerHTML=grid;
+
+// Event list
+const thisMonth=kalEvents.filter(e=>e.date.startsWith(kalYear+"-"+(String(kalMonth+1).padStart(2,"0"))));
+const listEl=document.getElementById("kal-list");
+if(!thisMonth.length){
+  listEl.innerHTML='<div style="padding:12px;font-size:10px;color:var(--dim);">Keine Termine diesen Monat.</div>';
+} else {
+  listEl.innerHTML=thisMonth.map(e=>{
+    const od=e.date<today;
+    return`<div style="padding:8px 12px;border-bottom:1px solid var(--border);border-left:2px solid ${e.type==="MEETING"?"var(--amber)":e.type==="ANRUF"?"var(--green)":e.type==="FOLLOW-UP"?"var(--red)":"var(--dim)"};">
+      <div style="display:flex;align-items:baseline;gap:6px;margin-bottom:2px;">
+        <span style="font-size:11px;font-weight:700;${od?"text-decoration:line-through;color:var(--dim)":""}">${esc(e.title)}</span>
+        <span style="margin-left:auto;font-size:9px;color:${od?"var(--red)":"var(--dim)"};">${e.date} ${e.time||""}</span>
+      </div>
+      <div style="display:flex;gap:5px;align-items:center;">
+        ${e.accName?`<span style="font-size:9px;color:var(--sub);">${esc(e.accName)}</span>`:""}
+        <span style="font-size:8px;color:var(--muted);">${e.type}</span>
+        <button style="margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:10px;" onclick="delKalEvent('${e.id}')">x</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// Next 7 days
+const n7El=document.getElementById("kal-next7");
+if(n7El){
+  const in7=[];
+  for(let i=0;i<=7;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const ds=d.toISOString().split("T")[0];
+    kalEvents.filter(e=>e.date===ds).forEach(e=>in7.push(e));
+  }
+  if(!in7.length){
+    n7El.innerHTML='<div style="font-size:10px;color:var(--dim);">Keine Termine in 7 Tagen.</div>';
+  } else {
+    n7El.innerHTML=in7.map(e=>`<div style="padding:7px 9px;background:var(--card);border:1px solid var(--border);border-left:2px solid var(--red);margin-bottom:4px;">
+      <div style="font-size:11px;font-weight:700;margin-bottom:2px;">${esc(e.title)}</div>
+      <div style="font-size:9px;color:var(--sub);">${e.date} ${e.time||""} ${e.accName?"· "+esc(e.accName):""}</div>
+    </div>`).join("");
+  }
+}
+}
+
+function kalSelectDay(date){
+const dayEvents=kalEvents.filter(e=>e.date===date);
+if(dayEvents.length){
+  alert(date+":\n"+dayEvents.map(e=>e.time+" "+e.title+(e.accName?" ("+e.accName+")":"")).join("\n"));
+}
+document.getElementById("kev-date").value=date;
+}
+
+function updKalSel(){
+try{
+  const el=document.getElementById("kev-acc");
+  if(!el)return;
+  el.innerHTML='<option value="">— Account —</option>'+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join("");
+}catch(e){}
+}
+
+function saveInpToAccount(){
+if(!window._lastInpResult)return;
+const {accId,raw}=window._lastInpResult;
+if(!accId){alert("Bitte Account im Dropdown waehlen.");return;}
+const i=accounts.findIndex(a=>a.id===accId);
+if(i<0)return;
+if(!accounts[i].log)accounts[i].log=[];
+accounts[i].log.push({id:uid(),type:"EMAIL",date:td(),text:raw.slice(0,300)});
+sd(SK,accounts);
+alert("Gespeichert in: "+accounts[i].company);
+G("accounts");SA(accId);
+}
+
+function resetData(){
+}
+
+
+
+// ═══════════════════════════════════════════════
+// DOKUMENTE SYSTEM
+// ═══════════════════════════════════════════════
+function saveDocs(){try{sd(DS,docs);}catch(e){}}
+
+function updDocSels(){
+  const accSel=document.getElementById('doc-acc-sel');
+  const filt=document.getElementById('doc-filter');
+  if(!accSel||!filt)return;
+  const opts='<option value="">— APOLLON erkennt automatisch —</option>'+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join('');
+  accSel.innerHTML=opts;
+  const fopts='<option value="">Alle Accounts</option>'+accounts.map(a=>`<option value="${a.id}">${esc(a.company)}</option>`).join('');
+  filt.innerHTML=fopts;
+}
+
+function handleDocDrop(e){
+  e.preventDefault();
+  document.getElementById('doc-drop').style.borderColor='#2A2A2A';
+  handleDocFiles(e.dataTransfer.files);
+}
+
+function handleDocFiles(files){
+  if(!files||!files.length)return;
+  const key=document.getElementById('apiKey').value.trim();
+  if(!key){alert('API Key fehlt.');return;}
+  processDocQueue(Array.from(files),key,0);
+}
+
+function processDocQueue(files,key,idx){
+  if(idx>=files.length){
+    document.getElementById('doc-progress').style.display='none';
+    renderDocs();
+    return;
+  }
+  const file=files[idx];
+  document.getElementById('doc-progress').style.display='block';
+  document.getElementById('doc-progress-text').textContent=`Verarbeite ${idx+1}/${files.length}: ${file.name}`;
+  
+  const reader=new FileReader();
+  const isPDF=file.name.toLowerCase().endsWith('.pdf');
+  
+  reader.onload=async function(e){
+    try{
+      let content='';
+      let mediaType='';
+      let isBase64=false;
+      
+      if(isPDF){
+        // Send as base64 to Claude for PDF analysis
+        const base64=e.target.result.split(',')[1];
+        mediaType='application/pdf';
+        isBase64=true;
+        content=base64;
+      } else {
+        content=e.target.result;
+      }
+      
+      // Build message for Claude
+      const preselAccId=document.getElementById('doc-acc-sel').value;
+      const preselAccName=preselAccId?(accounts.find(a=>a.id===preselAccId)||{}).company||'':'';
+      const accList=accounts.map(a=>a.company).join(', ');
+      
+      let messages;
+      if(isPDF&&isBase64){
+        messages=[{
+          role:'user',
+          content:[
+            {type:'document',source:{type:'base64',media_type:'application/pdf',data:content}},
+            {type:'text',text:`Analysiere dieses Dokument für APOLLON (REFUdrive GmbH Sales System).
+Bekannte Accounts: ${accList}
+${preselAccName?'Vorausgewählter Account: '+preselAccName:''}
+
+Antworte NUR in diesem Format:
+ACCOUNT: [Firmenname aus der Liste oder UNBEKANNT]
+TYP: [Email / Angebot / Datasheet / Technisch / Recherche / Excel / Vertrag / Sonstiges]
+DATUM: [Datum wenn erkennbar oder HEUTE]
+BETREFF: [Kurzer Titel max 60 Zeichen]
+ZUSAMMENFASSUNG: [3-5 Sätze was wirklich wichtig ist]
+SCHLÜSSELINFOS: [Die 3 wichtigsten konkreten Fakten - Zahlen, Namen, Entscheidungen]
+AKTION: [Was muss George als nächstes tun? Konkret.]`}
+          ]
+        }];
+      } else {
+        const truncated=content.length>8000?content.slice(0,8000)+'...':content;
+        messages=[{
+          role:'user',
+          content:`Analysiere dieses Dokument für APOLLON (REFUdrive GmbH Sales System).
+Bekannte Accounts: ${accList}
+${preselAccName?'Vorausgewählter Account: '+preselAccName:''}
+Dateiname: ${file.name}
+
+INHALT:
+${truncated}
+
+Antworte NUR in diesem Format:
+ACCOUNT: [Firmenname aus der Liste oder UNBEKANNT]
+TYP: [Email / Angebot / Datasheet / Technisch / Recherche / Excel / Vertrag / Sonstiges]
+DATUM: [Datum wenn erkennbar oder HEUTE]
+BETREFF: [Kurzer Titel max 60 Zeichen]
+ZUSAMMENFASSUNG: [3-5 Sätze was wirklich wichtig ist]
+SCHLÜSSELINFOS: [Die 3 wichtigsten konkreten Fakten - Zahlen, Namen, Entscheidungen]
+AKTION: [Was muss George als nächstes tun? Konkret.]`
+        }];
+      }
+      
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,messages})
+      });
+      const d=await res.json();
+      if(d.error)throw new Error(d.error.message);
+      const reply=d.content[0].text;
+      
+      // Parse response
+      const g=(k)=>{const m=reply.match(new RegExp(k+': ?([^\n]+)'));return m?m[1].trim():'-';};
+      const gb=(k)=>{const m=reply.match(new RegExp(k+': ?([\s\S]*?)(?=\n[A-Z]+:|$)'));return m?m[1].trim():'-';};
+      
+      let accId=preselAccId;
+      let accName=preselAccName;
+      const detectedAcc=g('ACCOUNT');
+      if(!accId&&detectedAcc&&detectedAcc!=='UNBEKANNT'){
+        const found=accounts.find(a=>a.company.toLowerCase().includes(detectedAcc.toLowerCase())||detectedAcc.toLowerCase().includes(a.company.toLowerCase().split(' ')[0]));
+        if(found){accId=found.id;accName=found.company;}
+        else{accName=detectedAcc;}
+      }
+      
+      const doc={
+        id:uid(),
+        filename:file.name,
+        filesize:Math.round(file.size/1024)+'KB',
+        accId,accName,
+        typ:g('TYP'),
+        datum:g('DATUM'),
+        betreff:g('BETREFF'),
+        zusammenfassung:gb('ZUSAMMENFASSUNG'),
+        schluessel:gb('SCHLÜSSELINFOS'),
+        aktion:gb('AKTION'),
+        uploadedAt:td(),
+        raw:reply
+      };
+      
+      docs.unshift(doc);
+      saveDocs();
+      
+      // Also add to account history if account found
+      if(accId){
+        const i=accounts.findIndex(a=>a.id===accId);
+        if(i>=0){
+          if(!accounts[i].log)accounts[i].log=[];
+          accounts[i].log.push({id:uid(),type:'SIGNAL',date:td(),text:`[DOC] ${file.name}: ${doc.betreff}`});
+          sd(SK,accounts);
+        }
+      }
+      
+    }catch(err){
+      docs.unshift({id:uid(),filename:file.name,filesize:Math.round(file.size/1024)+'KB',accId:'',accName:'FEHLER',typ:'Fehler',datum:td(),betreff:'Verarbeitungsfehler: '+err.message,zusammenfassung:err.message,schluessel:'-',aktion:'-',uploadedAt:td(),raw:''});
+      saveDocs();
+    }
+    processDocQueue(files,key,idx+1);
+  };
+  
+  if(isPDF){
+    reader.readAsDataURL(file);
+  } else {
+    reader.readAsText(file,'UTF-8');
+  }
+}
+
+function renderDocs(){
+  updDocSels();
+  const filt=document.getElementById('doc-filter');
+  const srch=document.getElementById('doc-srch');
+  if(!filt||!srch)return;
+  
+  const filtAcc=filt.value;
+  const q=srch.value.toLowerCase();
+  
+  let list=docs;
+  if(filtAcc)list=list.filter(d=>d.accId===filtAcc);
+  if(q)list=list.filter(d=>(d.filename||'').toLowerCase().includes(q)||(d.betreff||'').toLowerCase().includes(q)||(d.accName||'').toLowerCase().includes(q)||(d.zusammenfassung||'').toLowerCase().includes(q));
+  
+  document.getElementById('doc-count').textContent=list.length+' Dokument'+(list.length!==1?'e':'');
+  
+  const el=document.getElementById('doc-list');
+  if(!list.length){
+    el.innerHTML='<div class="empty"><div class="empty-t">KEIN DOKUMENT</div><div class="empty-s">Dateien hochladen oder Filter anpassen</div></div>';
+    return;
+  }
+  
+  const typColors={
+    'Email':'var(--blue)','Angebot':'var(--purple)','Datasheet':'var(--green)',
+    'Technisch':'var(--blue)','Recherche':'var(--amber)','Excel':'var(--green)',
+    'Vertrag':'var(--red)','Sonstiges':'var(--dim)','Fehler':'var(--red)'
+  };
+  
+  el.innerHTML=list.map(d=>{
+    const col=typColors[d.typ]||'var(--dim)';
+    return`<div style="background:var(--card);border:1px solid var(--border);border-left:2px solid ${col};padding:12px;margin-bottom:8px;">
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+        <span style="font-size:12px;font-weight:700;color:var(--white);">${esc(d.betreff||d.filename)}</span>
+        <span style="font-size:8px;font-weight:700;color:${col};border:1px solid ${col};padding:1px 5px;">${esc(d.typ)}</span>
+        ${d.accName?`<span style="font-size:9px;color:var(--sub);font-weight:700;">${esc(d.accName)}</span>`:''}
+        <span style="margin-left:auto;font-size:9px;color:var(--dim);">${d.uploadedAt}</span>
+      </div>
+      <div style="font-size:11px;color:var(--sub);line-height:1.65;margin-bottom:6px;">${esc(d.zusammenfassung||'-')}</div>
+      ${d.schluessel&&d.schluessel!=='-'?`<div style="background:var(--panel);padding:6px 9px;margin-bottom:6px;font-size:10px;color:var(--sub);border-left:2px solid var(--dim);">${esc(d.schluessel)}</div>`:''}
+      ${d.aktion&&d.aktion!=='-'?`<div style="background:var(--card);border:1px solid var(--border);border-left:2px solid var(--red);padding:7px 10px;font-size:11px;color:var(--white);">${esc(d.aktion)}</div>`:''}
+      <div style="display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;">
+        <span style="font-size:9px;color:var(--dim);">${esc(d.filename)} · ${d.filesize}</span>
+        ${d.accId?`<button class="btn sm" onclick="G('accounts');SA('${d.accId}')">→ Account</button>`:''}
+        <button class="btn sm" onclick="G('pentagon');document.getElementById('chatIn').value='DEEP DIVE: Dokument analysieren: ${esc(d.betreff||d.filename)}\n\nKontext: '+${JSON.stringify(d.zusammenfassung||'')}" style="margin-left:auto;">→ PENTAGON</button>
+        <button class="btn sm" style="color:var(--red);" onclick="deleteDoc('${d.id}')">Löschen</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteDoc(id){
+  docs=docs.filter(d=>d.id!==id);
+  saveDocs();renderDocs();
+}
+
+
+function handleInpDrop(e){
+  e.preventDefault();
+  document.getElementById('inp-drop').style.borderColor='#2A2A2A';
+  handleInpFiles(e.dataTransfer.files);
+}
+
+function handleInpFiles(files){
+  if(!files||!files.length)return;
+  const key=document.getElementById('apiKey').value.trim();
+  if(!key){alert('API Key fehlt.');return;}
+  processFileQueue(Array.from(files), key, 0, []);
+}
+
+async function processFileQueue(files, key, idx, results){
+  const out=document.getElementById('inp-out');
+  const ts=document.getElementById('inp-ts');
+  const total=files.length;
+  
+  if(idx>=total){
+    // All done - show summary
+    if(ts)ts.textContent=total+' Dateien verarbeitet';
+    document.getElementById('inp-drop').style.borderColor='var(--b)';
+    // Show all results
+    if(out)out.innerHTML=results.join('')||'<div class="empty"><div class="empty-t">FERTIG</div></div>';
+    return;
+  }
+  
+  const file=files[idx];
+  const isPDF=file.name.toLowerCase().endsWith('.pdf');
+  
+  // Show progress
+  if(ts)ts.textContent=(idx+1)+' / '+total+' — '+file.name;
+  document.getElementById('inp-drop').style.borderColor='var(--red)';
+  if(out)out.innerHTML=(results.length?results.join(''):'')+'<div style="padding:12px 14px;display:flex;align-items:center;gap:10px;color:var(--sub);font-size:12px;background:var(--card);border:1px solid var(--b);border-radius:8px;margin-bottom:6px;"><div class="dots"><span></span><span></span><span></span></div>Lese ('+( idx+1)+'/'+total+'): '+esc(file.name)+'</div>';
+  
+  const reader=new FileReader();
+  reader.onload=async function(e){
+    let content='';
+    let isBase64=false;
+    if(isPDF){content=e.target.result.split(',')[1];isBase64=true;}
+    else{content=e.target.result;}
+    
+    const accId=document.getElementById('inp-acc')?document.getElementById('inp-acc').value:'';
+    const accName=accId?(accounts.find(a=>a.id===accId)||{}).company||'':'';
+    const accList=accounts.slice(0,15).map(a=>a.company).join(', ');
+    
+    let resultHtml='';
+    try{
+      let messages;
+      if(isPDF&&isBase64){
+        messages=[{role:'user',content:[
+          {type:'document',source:{type:'base64',media_type:'application/pdf',data:content}},
+          {type:'text',text:'Analysiere fuer APOLLON (REFUdrive GmbH).\nAccounts: '+accList+'\n'+(accName?'Vorausgewaehlt: '+accName:'')+'\nNur dieses Format:\nACCOUNT: [Firmenname oder INTERN oder ALLGEMEIN]\nTYP: [Email/Angebot/Datasheet/Technisch/Recherche/Vertrag/Sonstiges]\nDATUM: [heute wenn unklar]\nBETREFF: [max 50 Zeichen]\nZUSAMMENFASSUNG: [2-3 Saetze]\nSCHLUESSELINFOS: [3 Fakten]\nAKTION: [naechster Schritt]'}
+        ]}];
+      } else {
+        const trunc=content.length>5000?content.slice(0,5000)+'...':content;
+        messages=[{role:'user',content:'Analysiere fuer APOLLON (REFUdrive GmbH).\nDatei: '+file.name+'\nAccounts: '+accList+'\n'+(accName?'Vorausgewaehlt: '+accName:'')+'\nINHALT:\n'+trunc+'\nNur dieses Format:\nACCOUNT: [Firmenname oder INTERN oder ALLGEMEIN]\nTYP: [Email/Angebot/Datasheet/Technisch/Recherche/Vertrag/Sonstiges]\nDATUM: [heute wenn unklar]\nBETREFF: [max 50 Zeichen]\nZUSAMMENFASSUNG: [2-3 Saetze]\nSCHLUESSELINFOS: [3 Fakten]\nAKTION: [naechster Schritt]'}];
+      }
+      
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:600,messages})
+      });
+      const d=await res.json();
+      if(d.error)throw new Error(d.error.message);
+      const reply=d.content[0].text;
+      
+      const g=(k)=>{const m=reply.match(new RegExp(k+':\\s*([^\\n]+)'));return m?m[1].trim():'-';};
+      const gb=(k)=>{const m=reply.match(new RegExp(k+':\\s*([\\s\\S]*?)(?=\\n[A-Z]+:|$)'));return m?m[1].trim():'-';};
+      
+      let detAccId=accId,detAccName=accName;
+      const detAcc=g('ACCOUNT');
+      if(!detAccId&&detAcc&&detAcc!=='INTERN'&&detAcc!=='ALLGEMEIN'){
+        const found=accounts.find(a=>a.company.toLowerCase().includes(detAcc.toLowerCase().split(' ')[0])||detAcc.toLowerCase().includes(a.company.toLowerCase().split(' ')[0]));
+        if(found){detAccId=found.id;detAccName=found.company;}
+        else{detAccName=detAcc;}
+      }
+      
+      const doc={id:uid(),filename:file.name,filesize:Math.round(file.size/1024)+'KB',accId:detAccId,accName:detAccName,typ:g('TYP'),datum:g('DATUM'),betreff:g('BETREFF'),zusammenfassung:gb('ZUSAMMENFASSUNG'),schluessel:gb('SCHLUESSELINFOS'),aktion:gb('AKTION'),uploadedAt:td(),raw:reply};
+      docs.unshift(doc);saveDocs();
+      
+      if(detAccId){
+        const i=accounts.findIndex(a=>a.id===detAccId);
+        if(i>=0){if(!accounts[i].log)accounts[i].log=[];accounts[i].log.push({id:uid(),type:'SIGNAL',date:td(),text:'[DOC] '+file.name});sd(SK,accounts);}
+      }
+      
+      const col=detAccId?'var(--green)':detAccName&&detAccName!=='Allgemein'?'var(--amber)':'var(--dim)';
+      resultHtml=`<div style="background:var(--card);border:1px solid var(--b);border-left:3px solid ${col};padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:10px;font-weight:700;color:${col};">✓ ${esc(file.name)}</span>
+          <span style="font-size:9px;color:var(--dim);margin-left:auto;">${esc(detAccName||'Allgemein')} · ${esc(g('TYP'))}</span>
+        </div>
+        <div style="font-size:11px;color:var(--sub);line-height:1.65;">${esc(gb('ZUSAMMENFASSUNG'))}</div>
+        <div style="margin-top:6px;font-size:11px;color:var(--w);border-left:2px solid var(--red);padding-left:8px;">${esc(gb('AKTION'))}</div>
+      </div>`;
+    }catch(err){
+      resultHtml=`<div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px 14px;border-radius:0 8px 8px 0;margin-bottom:6px;font-size:11px;color:var(--red);">✗ ${esc(file.name)}: ${err.message}</div>`;
+    }
+    
+    results.push(resultHtml);
+    processFileQueue(files, key, idx+1, results);
+  };
+  if(isPDF)reader.readAsDataURL(file);
+  else reader.readAsText(file,'UTF-8');
+}
+
+
+function renderKompass(accId, raw) {
+  const el = document.getElementById('kompass-body-' + accId);
+  if (!el) return;
+  if (!raw) {
+    el.innerHTML = '<div class="empty" style="height:80px;"><div class="empty-t">KEIN KOMPASS</div><div class="empty-s">Klick AKTUALISIEREN um zu starten</div></div>';
+    return;
+  }
+  
+  const g = (k) => {
+    const m = raw.match(new RegExp(k + ': ?([\\s\\S]*?)(?=\\n[A-ZÜÄÖ ]+:|===ENDE===|$)'));
+    return m ? m[1].trim() : '-';
+  };
+  
+  const sections = [
+    {k: 'AKTUELLER STAND', icon: '◉', col: 'var(--white)'},
+    {k: 'TOP ENTSCHEIDUNGEN', icon: '⬡', col: 'var(--amber)'},
+    {k: 'RISIKEN', icon: '▲', col: 'var(--red)'},
+    {k: 'CHANCEN', icon: '◆', col: 'var(--green)'},
+    {k: 'DOS', icon: '✓', col: 'var(--green)'},
+    {k: 'DONTS', icon: '✕', col: 'var(--red)'},
+    {k: 'TRENDS', icon: '→', col: 'var(--blue)'},
+    {k: 'OFFENE FRAGEN', icon: '?', col: 'var(--amber)'},
+    {k: 'NAECHSTE SCHRITTE', icon: '▶', col: 'var(--red)'}
+  ];
+  
+  let h = '';
+  sections.forEach(s => {
+    const val = g(s.k);
+    if (val && val !== '-') {
+      const isAction = s.k === 'NAECHSTE SCHRITTE';
+      h += `<div style="margin-bottom:10px;${isAction ? 'border-left:2px solid var(--red);padding-left:10px;' : ''}">
+        <div style="font-size:8px;font-weight:700;letter-spacing:.14em;color:${s.col};margin-bottom:4px;">${s.icon} ${s.k.replace('NAECHSTE ', 'NÄCHSTE ')}</div>
+        <div style="font-size:11px;line-height:1.7;color:${isAction ? 'var(--white)' : 'var(--sub)'};">${esc(val)}</div>
+      </div>`;
+    }
+  });
+  
+  el.innerHTML = h || '<div class="hb-empty">Kein Inhalt erkannt.</div>';
+}
+
+function loadKompassIfExists(accId) {
+  const a = accounts.find(x => x.id === accId);
+  if (!a) return;
+  const el = document.getElementById('kompass-body-' + accId);
+  if (!el) return;
+  if (a.kompass) {
+    renderKompass(accId, a.kompass);
+  } else {
+    el.innerHTML = '<div class="empty" style="height:80px;"><div class="empty-t">KEIN KOMPASS</div><div class="empty-s">Klick AKTUALISIEREN — APOLLON analysiert alle Account-Infos</div></div>';
+  }
+}
+
+// Boot after DOM ready - functions already global
+document.addEventListener('DOMContentLoaded', function() {
+  boot();
+});
+
+</script>
+</body>
+</html<!-- INPUT CENTER -->
+<div class="page" id="pg-input">
+  <div style="padding:18px 24px 14px;border-bottom:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+    <div style="font-size:18px;font-weight:800;margin-bottom:4px;">INPUT CENTER</div>
+    <div style="font-size:13px;color:var(--sub);">Alles rein — Text kopieren oder Datei hochladen. APOLLON sortiert automatisch.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden;">
+    <!-- LEFT -->
+    <div style="display:flex;flex-direction:column;border-right:1px solid var(--b);overflow:hidden;">
+      <!-- Upload Zone -->
+      <div id="inp-drop" onclick="document.getElementById('inp-file').click()" ondragover="event.preventDefault();this.style.borderColor='var(--red)'" ondragleave="this.style.borderColor='var(--b)'" ondrop="handleInpDrop(event)" style="margin:16px;border:2px dashed var(--b);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s;flex-shrink:0;">
+        <input type="file" id="inp-file" multiple accept=".pdf,.txt,.eml,.csv,.docx,.xlsx,.msg" style="display:none" onchange="handleInpFiles(this.files)">
+        <div style="font-size:28px;margin-bottom:8px;color:var(--red);">&#8679;</div>
+        <div style="font-size:13px;font-weight:700;color:var(--w);margin-bottom:4px;">Datei hochladen</div>
+        <div style="font-size:11px;color:var(--sub);">PDF · Word · Excel · TXT · EML</div>
+        <div style="font-size:11px;color:var(--dim);margin-top:4px;">Klicken oder Drag &amp; Drop</div>
+      </div>
+      <!-- Divider -->
+      <div style="display:flex;align-items:center;gap:10px;padding:0 16px;flex-shrink:0;">
+        <div style="flex:1;height:1px;background:var(--b);"></div>
+        <div style="font-size:10px;color:var(--dim);font-weight:600;">ODER TEXT EINFÜGEN</div>
+        <div style="flex:1;height:1px;background:var(--b);"></div>
+      </div>
+      <!-- Account selector -->
+      <div style="padding:10px 16px 0;display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <select id="inp-acc" class="fsel" style="flex:1;">
+          <option value="">— Account automatisch erkennen —</option>
+        </select>
+      </div>
+      <!-- Text area -->
+      <textarea id="inp-raw" style="flex:1;resize:none;border:none;padding:14px 16px;font-size:13px;line-height:1.75;background:var(--bg);color:var(--w);font-family:inherit;outline:none;margin-top:8px;" placeholder="E-Mail Text einfügen, Meeting-Notizen, Anruf-Zusammenfassung, LinkedIn-Profil, Recherche...&#10;&#10;APOLLON erkennt automatisch:&#10;— Welcher Account&#10;— Was CRM-relevant ist&#10;— Was Follow-up braucht&#10;— Was ein Signal ist"></textarea>
+      <!-- Actions -->
+      <div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+        <button class="btn p" id="inp-btn" onclick="processInput()" style="flex:1;padding:10px;">VERARBEITEN</button>
+        <button class="btn" onclick="document.getElementById('inp-raw').value='';document.getElementById('inp-out').innerHTML='<div class=empty><div class=empty-t>BEREIT</div></div>';document.getElementById('inp-ts').textContent='Bereit'">LEEREN</button>
+      </div>
+    </div>
+    <!-- RIGHT: Output -->
+    <div style="display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:10px 16px;border-bottom:1px solid var(--b);background:var(--panel);display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <div style="font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--red);">APOLLON ANALYSE</div>
+        <div id="inp-ts" style="margin-left:auto;font-size:10px;color:var(--dim);">Bereit</div>
+      </div>
+      <div id="inp-out" style="flex:1;overflow-y:auto;padding:14px 16px;">
+        <div class="empty"><div class="empty-t">BEREIT</div><div class="empty-s">Text eingeben oder Datei hochladen</div></div>
+      </div>
+      <div id="inp-actions" style="display:none;padding:10px 16px;border-top:1px solid var(--b);background:var(--panel);flex-shrink:0;">
+        <div style="font-size:9px;font-weight:600;color:var(--dim);margin-bottom:6px;">SPEICHERN IN</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn p s" onclick="saveInpToAccount()">ACCOUNT HISTORY</button>
+          <button class="btn s" onclick="G('pentagon')">→ PENTAGON</button>
+          <button class="btn s" onclick="G('docs')">→ ARCHIV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>>
