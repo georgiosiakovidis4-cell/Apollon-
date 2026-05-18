@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>APOLLON v6 — REFUdrive</title>
+<title>APOLLON v7 — REFUdrive</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -263,7 +263,7 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
 
 <div class="tb">
   <div class="brand">APOLL<em>ON</em></div>
-  <span class="ver">v6</span>
+  <span class="ver">v7</span>
   <button class="tab t-home on" id="tab-home" onclick="G('home')">⌂ HOME</button>
   <button class="tab t-input" id="tab-input" onclick="G('input')">↑ INPUT</button>
   <button class="tab t-accounts" id="tab-accounts" onclick="G('accounts')">☰ ACCOUNTS</button>
@@ -609,6 +609,7 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
 // ═══════════════════════════════════════
 
 const SYS="Du bist APOLLON, das zentrale Sales-Intelligence- und Execution-System von Georgios Iakovidis (George), Senior BDM bei REFUdrive GmbH.\n\nOBERSTE REGEL: Erst verstehen. Dann fragen. Dann verdichten. Dann handeln.\nKein operativer Schritt ohne Kontext. Keine Mail. Kein Follow-up. Keine Phase. Kein CRM-Eintrag.\n\nREFUDRIVE:\nJV PRETTL Group (DE) + Kalyani/Bharat Forge (IN). HQ Pfullingen BW. CEO Massimo Ottino. Head of Sales Christian Oehring (Chrisi). 1 Mio EUR Verlust 2024. George: Start 01.05.2026, 15h/Woche, 20+ Jahre NFZ-Erfahrung DACH.\n\nPRODUKTE:\nRPCS 730: 80-320 kVA Traktionsinverter. SiC 99%. 300-850V DC. IP67/IP6K9K. -25 bis +85C kein Derating. 1200A Peak. 2 Wochen IBN via REFUdriver SW.\nOBC-22K: 22kW AC-Laden. DC 550-850V. SiC. IP6K9K. SAE J1939. Parallel bis 8 Einheiten = 176kW.\nRPCS 790: DC/DC 3/4/6kW. bis 900V. IP67. AEC-qualifiziert. -40 bis +85C.\nAFE-220: V2G bidirektional. bis 220kW. IP68.\nAuxiliary: 2x28K/2x55K. ePTO Kommunal/NFZ.\nISO 9001, ISO 50001, KBA-Zertifikat (bis 04.01.2027), TUeV SUeD.\n\nWETTBEWERB:\nDana TM4: HIGH. 35 Wochen Lieferzeit. Mindestmengen.\nDanfoss Editron: MED. Marine-DNA.\nZAPI: MED. Niedervolt.\nBosch: LOW. PKW-fokussiert.\nCN-Player: HIGH. Gefaehrdet 80% Bundesfoerderung.\n\nKILLER-SAETZE:\nvs Dana: Dana liefert in 35 Wochen. Wie viele Auftraege verliert ihr in dieser Zeit? Wir stehen 2 Wochen nach Auftragserteilung in eurer Halle.\nvs CN: CN-Inverter gefaehrden die 80% Bundesfoerderung. REFUdrive ist KBA-zertifiziert, TUeV SUeD geprueft.\nDerating: Unser Inverter faehrt im August einen Suedschwarzwald-Anstieg mit 40 Grad vollbeladen ohne Leistungsreduzierung. Was habt ihr gerade drin?\n\nACCOUNT LOGIC - ZWEI EBENEN (NIE VERMISCHEN):\nEbene 1 - Strategisch: P1=kritisch, P2=wichtig, P3=nachrangig\nEbene 2 - Operativ: A=aktiv jetzt (Deep Dive+FU woechentlich+CRM taglich), B=Pflege (monatlich+Signale), C=halten (nur reagieren), D=beobachten (nur Radar)\n\nDEEP-DIVE STOPP-REGEL:\nPruefe zuerst: Unternehmen? OEM/Systemlieferant/Zulieferer? Bestandskunde/Neukunde? Buying Center? Pain Points? Fit?\nWenn unklar: Frage. Maximal 3 praezise Fragen. Dann zusammenfassen. Erst dann handeln.\n\nPENTAGON AUSGABE: RESEARCH / BENCHMARK / KONTEXT / KNOWLEDGE / FIT / PAIN POINTS / TRIGGERS / ACTION / NAECHSTER SCHRITT / ABLAGEORT\nRADAR AUSGABE: SIGNAL / QUELLE / DATUM / ACCOUNT-MARKT / SIGNALSTAERKE / LAYER 1 / LAYER 2 / LAYER 3 / INTERPRETATION / FIT / PRIORITAET / NAECHSTE AKTION / ABLAGEORT\nFRANZ AUSGABE: BETREFF / MAIL-TYP / THREAD / ACCOUNT / PROJEKT-PHASE / AUSWERTUNG / SENSIBILISIERUNG / FIT / DTR-STRATEGIE / NAECHSTE AKTION / ABLAGEORT\nACCOUNT AUSGABE: ACCOUNT / STRATEGIC TIER / ACTIVITY TIER / UMSATZHEBEL / STRATEGISCHE BEDEUTUNG / AKTUELLER STATUS / LETZTER KONTAKT / SIGNALE / RISIKO / NAECHSTER SCHRITT / WORKFLOW\n\nWINKLER-STIL: Schreibe wie ein erfahrener Mensch. Direkt. Klar. Auf Augenhoehe. KEINE Bulletpoints. KEINE Listen. Nur Prosa. Keine Floskeln. Zahlen nutzen. OEM-Fachbegriffe: TCO, SOP, Design-In, RFQ, IBN, PPAP.\n\n90-TAGE-FOKUS: Alles auf Umsatz, Pipeline, Fit, Tempo, Sichtbarkeit, saubere Execution. Priorisierung nach Umsatzwirkung.\nRot=sofort. Gelb=qualifizieren. Blau=beobachten. Grau=ignorieren.\n\nGEORGE STEUERT. APOLLON DENKT MIT. APOLLON VERDICHTET. APOLLON PRIORISIERT. APOLLON LIEFERT HANDLUNG.";
+const KOMPASS_SYS = "Du bist der ACCOUNT KOMPASS von APOLLON fuer REFUdrive GmbH. Analysiere den Account und erstelle einen strukturierten Kompass.\n\nFormat:\n\nAKTUELLER STAND\n[Was ist der genaue Stand? Was ist bekannt?]\n\nTOP-ENTSCHEIDUNGEN\n[Was muss George in den naechsten 2 Wochen entscheiden oder tun?]\n\nRISIKEN\n[Was koennte schiefgehen? Was muss George vermeiden?]\n\nCHANCEN\n[Wo liegt Potenzial das noch nicht genutzt wird?]\n\nNAECHSTER SCHRITT\n[Konkret. Was. Wer. Wann. Wie.]\n\nKurz. Direkt. Kein Marketing-Sprech.";
 
 const INP_SYS = "Du bist der INPUT-VERARBEITER von APOLLON. Analysiere den rohen Input und liefere eine strukturierte Auswertung.\n\nACCOUNT ERKENNUNG: Erkenne automatisch um welches Unternehmen es geht (Sennebogen, Manitou, Mecalac etc.).\n\nTYP ERKENNUNG: Erkenne automatisch ob es eine E-Mail, Meeting-Notiz, Anruf-Protokoll, LinkedIn-Profil oder Dokument ist.\n\nAusgabe EXAKT in diesem Format:\n===INPUT ANALYSE===\nTYP: [E-Mail / Meeting / Anruf / LinkedIn / Dokument / Notiz]\nACCOUNT: [Firmenname oder UNBEKANNT]\nKONTAKT: [Name, Funktion wenn erkennbar]\nDATUM: [Datum wenn erkennbar oder HEUTE]\nSPRACHE: [DE / EN / FR / andere]\n---KERNINHALT---\n[Was steht wirklich drin? 2-3 Saetze. Kein Copy-Paste - eigene Worte.]\n---THEMEN SPLITTING---\nCRM-RELEVANT: [Was gehoert in die Account-Historie?]\nFOLLOW-UP: [Was braucht eine Reaktion? Bis wann?]\nSIGNAL: [Was ist ein Markt- oder Verkaufssignal?]\nNUR ARCHIV: [Was ist nur zur Dokumentation?]\n---SENSIBILISIERUNG---\n[Risiken, politische Dynamik, versteckte Botschaften, Warnsignale - max 2 Saetze]\n---NAECHSTE AKTION---\n[Konkret. Was. Wer. Wann. Kanal.]\n===ENDE===\nKurz. Direkt. Prosa. Keine Bulletpoints.";
 
@@ -689,6 +690,9 @@ function SA(id){
   RL();
   const a=accounts.find(x=>x.id===id);
   if(!a)return;
+  // Normalize data format
+  if(!Array.isArray(a.log))a.log=a.log?[{id:uid(),type:'NOTE',date:'2026-01-01',text:String(a.log)}]:[];
+  if(!Array.isArray(a.contacts))a.contacts=[];
   document.getElementById('det-empty').style.display='none';
   const dm=document.getElementById('det-main');
   dm.style.display='flex';
@@ -709,9 +713,9 @@ function SA(id){
   document.getElementById('d-sop').value=a.sop||'';
   document.getElementById('d-nre').value=a.nre||'';
   // Last contact
-  const log=a.log||[];
-  const lc=log.length?log[log.length-1]:'';
-  document.getElementById('d-lc').textContent=lc?(lc.date+' · '+lc.type):'—';
+  const log=(a.log||[]).filter(e=>e&&e.text);
+  const lc=log.length?log[log.length-1]:null;
+  document.getElementById('d-lc').textContent=lc?(((lc.date||'').slice(0,10)||'—')+' · '+(lc.type||'NOTE')):'—';
   renderLog(a);
   renderContacts(a);
   renderKompass(a);
@@ -730,9 +734,14 @@ window.sv=sv;
 // TABS IN ACCOUNT DETAIL
 function showTab(tab){
   ['hist','cont','opp','komp'].forEach(t=>{
-    document.getElementById('dt-'+t).classList.toggle('on',t===tab);
-    document.getElementById('tc-'+t).classList.toggle('on',t===tab);
-    document.getElementById('tc-'+t).style.display=t===tab?'flex':'none';
+    const btn=document.getElementById('dt-'+t);
+    const tc=document.getElementById('tc-'+t);
+    if(btn)btn.classList.toggle('on',t===tab);
+    if(tc){
+      tc.classList.toggle('on',t===tab);
+      tc.style.display=t===tab?'flex':'none';
+      if(t===tab)tc.style.flexDirection='column';
+    }
   });
 }
 window.showTab=showTab;
@@ -743,7 +752,7 @@ function renderLog(a){
   if(!el)return;
   const log=[...(a.log||[])].reverse();
   if(!log.length){el.innerHTML='<div class="hnil">Noch keine Einträge.</div>';return;}
-  el.innerHTML=log.map(e=>`<div class="log-item">
+  el.innerHTML=log.filter(e=>e&&e.text).map(e=>`<div class="log-item">
     <span class="log-d">${e.date||''}</span>
     <span class="log-t ${e.type||'NOTE'}">${e.type||'NOTE'}</span>
     <span class="log-b">${esc(e.text||'')}</span>
@@ -756,7 +765,12 @@ function addLog(){
   if(!a)return;
   const tx=document.getElementById('nl-tx').value.trim();
   if(!tx)return;
-  if(!a.log)a.log=[];
+  // Force log to be array regardless of old data
+  if(!Array.isArray(a.log)){
+    const old=a.log;
+    a.log=[];
+    if(old&&typeof old==='string'&&old.trim())a.log.push({id:uid(),type:'NOTE',date:'2026-01-01',text:old});
+  }
   a.log.push({id:uid(),type:document.getElementById('nl-tp').value,date:document.getElementById('nl-dt').value||td(),text:tx});
   saveData('ap_a',accounts);
   document.getElementById('nl-tx').value='';
@@ -779,7 +793,7 @@ window.delLog=delLog;
 function renderContacts(a){
   const el=document.getElementById('d-cts');
   if(!el)return;
-  const cts=a.contacts||[];
+  const cts=Array.isArray(a.contacts)?a.contacts:[];
   if(!cts.length){el.innerHTML='<div class="hnil">Keine Kontakte.</div>';return;}
   el.innerHTML=cts.map(c=>`<div class="ct-row">
     <span class="ct-n">${esc(c.name)}</span>
@@ -1253,9 +1267,20 @@ window.rTab=showRTab;
 
 // MAKE HELPER FUNCTION mkA available
 function mkA(company,cat,phase,prio,op,industry,product,notes,contacts,log,fudate,futext,volume,sop,nre){
+  // contacts param = contact name string, log param = contact title string (legacy)
+  const cts=[];
+  if(contacts&&typeof contacts==='string'&&contacts.trim()){
+    cts.push({id:uid(),name:contacts,title:log||'',role:'Entscheider'});
+    log=[];
+  }
+  // notes field may contain initial log entry  
+  const lg=Array.isArray(log)?log:[];
+  if(notes&&typeof notes==='string'&&notes.trim()&&!lg.length){
+    lg.push({id:uid(),type:'NOTE',date:'2026-05-01',text:notes});
+  }
   return {id:uid(),company,cat:cat||'',phase:phase||'Signal erkannt',prio:prio||'P2',op:op||'D',
-    industry:industry||'',product:product||'',notes:notes||'',contacts:contacts||[],
-    log:log||[],fudate:fudate||'',futext:futext||'',volume:volume||'',sop:sop||'',
+    industry:industry||'',product:product||'',notes:notes||'',contacts:cts,
+    log:lg,fudate:fudate||'',futext:futext||'',volume:volume||'',sop:sop||'',
     nre:nre||'',kompass:null,kompassDate:null};
 }
 
@@ -1291,73 +1316,14 @@ accounts=[
   mkA("Magni","Pipeline Target","Signal erkannt","P3","D","Bau","OBC22K","Teleskoplader Italien.","","","","","","",""),
   mkA("JCB","Pipeline Target","Signal erkannt","P1","A","Bau","RPCS730 + OBC22K","EV-Produkte bereits beim Kunden. 100+ Einheiten im Markt. Supply Chain unter Druck. Sofortiger Bedarf.","","","","","Engineering Powertrain Kontakt suchen","EV already in customer hands = supply chain pressure NOW.",""),
 ];
-sd(SK,accounts);
+saveData("ap_a",accounts);
 }
 // Aliases for console use
 window.renderALL = function(){renderAll();};
 window.RESET = function(){resetData();};
-window.LOAD = function(){seed();sd(SK,accounts);renderAll();alert(accounts.length+" Accounts geladen!");};
+window.LOAD = function(){seed();saveData("ap_a",accounts);renderAll();alert(accounts.length+" Accounts geladen!");};
 
-// INPUT CENTER
-// removed duplicate
-
-async function processInput(){
-const key=document.getElementById("apiKey").value.trim();
-if(!key){alert("API Key fehlt.");return;}
-const raw=document.getElementById("inp-raw").value.trim();
-if(!raw){alert("Bitte erst Input eingeben.");return;}
-const accId=document.getElementById("inp-acc").value;
-const accName=accId?(accounts.find(a=>a.id===accId)||{}).company||"":"";
-const typ=document.getElementById("inp-type").value;
-
-document.getElementById("inp-btn").disabled=true;
-document.getElementById("inp-ts").textContent="Verarbeite...";
-document.getElementById("inp-out").innerHTML='<div class="empty"><div style="display:flex;align-items:center;gap:8px;color:var(--dim);font-size:11px;">APOLLON analysiert <div class="dots"><span></span><span></span><span></span></div></div></div>';
-
-let msg=raw;
-if(accName)msg="ACCOUNT KONTEXT: "+accName+"\n\n"+msg;
-if(typ!=="AUTO")msg="TYP: "+typ+"\n\n"+msg;
-
-try{
-  const res=await fetch("https://api.anthropic.com/v1/messages",{
-    method:"POST",
-    headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-    body:JSON.stringify({model:"claude-sonnet-4-5",max_tokens:1500,system:INP_SYS,messages:[{role:"user",content:msg}]})
-  });
-  const d=await res.json();
-  if(d.error)throw new Error(d.error.message);
-  const reply=d.content[0].text;
-  renderInputOutput(reply,accId);
-  document.getElementById("inp-ts").textContent="Fertig - "+new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
-  document.getElementById("inp-actions").style.display="block";
-  // Store last result for saving
-  window._lastInpResult={text:reply,accId,accName,raw};
-}catch(err){
-  document.getElementById("inp-out").innerHTML='<div style="color:var(--red);padding:14px;font-size:12px;">Fehler: '+err.message+'</div>';
-  document.getElementById("inp-ts").textContent="Fehler";
-}
-document.getElementById("inp-btn").disabled=false;
-}
-
-
-
-// BOOT
-document.addEventListener('DOMContentLoaded',function(){
-  // Load API key
-  const k=localStorage.getItem('ap_key');
-  if(k){const el=document.getElementById('apiKey');if(el){el.value=k;saveKey(k);}}
-  // Load data
-  const savedAccs=loadData('ap_a');
-  if(savedAccs&&savedAccs.length){accounts=savedAccs;}
-  else{try{seed();saveData('ap_a',accounts);}catch(e){console.error('Seed:',e);}}
-  const savedDocs=loadData('ap_d');
-  if(savedDocs&&savedDocs.length)docs=savedDocs;
-  // Render
-  renderHome();
-  RL();
-  populateDocAccFilter();
-  document.getElementById('nl-dt').value=td();
-});
+// INPUT CENTER - handled above
 </script>
 </body>
 </html>
