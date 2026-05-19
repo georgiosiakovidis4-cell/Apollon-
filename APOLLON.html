@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>APOLLON v7 — REFUdrive</title>
+<title>APOLLON v8 — REFUdrive</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -1271,7 +1271,7 @@ window.renderHome=renderHome;
 window.rTab=showRTab;
 
 // MAKE HELPER FUNCTION mkA available
-function mkA(company,cat,phase,prio,op,industry,product,notes,contacts,log,fudate,futext,volume,sop,nre){
+function mkA(company,cat,phase,prio,op,industry,product,notes,contacts,log,fudate,futext,volume,sop,nre,fixedId){
   // contacts param = contact name string, log param = contact title string (legacy)
   const cts=[];
   if(contacts&&typeof contacts==='string'&&contacts.trim()){
@@ -1283,7 +1283,7 @@ function mkA(company,cat,phase,prio,op,industry,product,notes,contacts,log,fudat
   if(notes&&typeof notes==='string'&&notes.trim()&&!lg.length){
     lg.push({id:uid(),type:'NOTE',date:'2026-05-01',text:notes});
   }
-  return {id:uid(),company,cat:cat||'',phase:phase||'Signal erkannt',prio:prio||'P2',op:op||'D',
+  return {id:fixedId||uid(),company,cat:cat||'',phase:phase||'Signal erkannt',prio:prio||'P2',op:op||'D',
     industry:industry||'',product:product||'',notes:notes||'',contacts:cts,
     log:lg,fudate:fudate||'',futext:futext||'',volume:volume||'',sop:sop||'',
     nre:nre||'',kompass:null,kompassDate:null};
@@ -1339,33 +1339,22 @@ document.addEventListener('DOMContentLoaded', function(){
     if(el){ el.value = k; saveKey(k); }
   }
 
-  // ALWAYS seed first - accounts are always available
-  try{ seed(); } catch(e){ console.error('Seed error:', e); }
-
-  // Merge user edits from localStorage on top
+  // Load from localStorage OR seed fresh
   try{
     const saved = loadData('ap_a');
-    if(saved && saved.length){
-      saved.forEach(s => {
-        const i = accounts.findIndex(a => a.id === s.id);
-        if(i >= 0){
-          if(Array.isArray(s.log) && s.log.length) accounts[i].log = s.log;
-          if(Array.isArray(s.contacts) && s.contacts.length) accounts[i].contacts = s.contacts;
-          if(s.phase) accounts[i].phase = s.phase;
-          if(s.fudate) accounts[i].fudate = s.fudate;
-          if(s.futext) accounts[i].futext = s.futext;
-          if(s.notes) accounts[i].notes = s.notes;
-          if(s.volume) accounts[i].volume = s.volume;
-          if(s.product) accounts[i].product = s.product;
-          if(s.kompass) accounts[i].kompass = s.kompass;
-          if(s.kompassDate) accounts[i].kompassDate = s.kompassDate;
-        }
-      });
+    const ver = localStorage.getItem('ap_data_ver');
+    if(saved && saved.length >= 28 && ver === 'v8'){
+      // Use saved data with user edits
+      accounts = saved;
+    } else {
+      // Fresh seed - first time or version update
+      seed();
+      saveData('ap_a', accounts);
+      localStorage.setItem('ap_data_ver', 'v8');
     }
-  } catch(e){ console.warn('Merge:', e); }
-
-  // Save merged state
-  saveData('ap_a', accounts);
+  } catch(e){
+    try{ seed(); saveData('ap_a', accounts); } catch(e2){}
+  }
 
   // Load docs
   try{ const d = loadData('ap_d'); if(d && d.length) docs = d; } catch(e){}
