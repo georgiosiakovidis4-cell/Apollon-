@@ -619,8 +619,104 @@ let flt={pr:'ALL',op:'ALL'};
 let _docTab='wissen';
 
 // STORAGE
+// Supabase config
+const SB_URL = "https://mhqhfysxbwbarvmimrsw.supabase.co";
+const SB_KEY = "sb_publishable_pgWTdpBo6JmNVyMSaluI8Q_b6HjSp4g";
+
+// Supabase API helper
+async function sbFetch(path, method, body) {
+  const res = await fetch(SB_URL + path, {
+    method: method || 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Prefer': method === 'POST' ? 'resolution=merge-duplicates' : ''
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+// Save/Load still use localStorage as cache
 function saveData(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 function loadData(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}}
+
+// Supabase sync functions
+async function syncAccountsToCloud(){
+  try{
+    await sbFetch('/rest/v1/accounts', 'POST', accounts.map(a => ({
+      id: a.id, company: a.company, cat: a.cat||'', phase: a.phase||'Signal erkannt',
+      prio: a.prio||'P2', op: a.op||'D', industry: a.industry||'',
+      product: a.product||'', notes: a.notes||'', fudate: a.fudate||'',
+      futext: a.futext||'', volume: a.volume||'', sop: a.sop||'',
+      nre: a.nre||'', kompass: a.kompass||'', kompass_date: a.kompassDate||'',
+      log: Array.isArray(a.log)?a.log:[],
+      contacts: Array.isArray(a.contacts)?a.contacts:[]
+    })));
+  } catch(e) { console.warn('Sync error:', e); }
+}
+
+async function syncOneAccount(a){
+  try{
+    await sbFetch('/rest/v1/accounts?id=eq.'+a.id, 'PATCH', {
+      phase: a.phase||'', op: a.op||'', prio: a.prio||'',
+      fudate: a.fudate||'', futext: a.futext||'', notes: a.notes||'',
+      product: a.product||'', volume: a.volume||'',
+      kompass: a.kompass||'', kompass_date: a.kompassDate||'',
+      log: Array.isArray(a.log)?a.log:[],
+      contacts: Array.isArray(a.contacts)?a.contacts:[],
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) { console.warn('Sync one error:', e); }
+}
+
+async function loadAccountsFromCloud(){
+  try{
+    const data = await sbFetch('/rest/v1/accounts?select=*&order=company.asc');
+    if(data && data.length){
+      return data.map(r => ({
+        id: r.id, company: r.company, cat: r.cat||'',
+        phase: r.phase||'Signal erkannt', prio: r.prio||'P2', op: r.op||'D',
+        industry: r.industry||'', product: r.product||'', notes: r.notes||'',
+        fudate: r.fudate||'', futext: r.futext||'', volume: r.volume||'',
+        sop: r.sop||'', nre: r.nre||'', kompass: r.kompass||'',
+        kompassDate: r.kompass_date||'',
+        log: Array.isArray(r.log)?r.log:[],
+        contacts: Array.isArray(r.contacts)?r.contacts:[]
+      }));
+    }
+    return null;
+  } catch(e) { console.warn('Load cloud error:', e); return null; }
+}
+
+async function syncDocToCloud(doc){
+  try{
+    await sbFetch('/rest/v1/documents', 'POST', [{
+      id: doc.id, filename: doc.filename||'', filesize: doc.filesize||'',
+      acc_id: doc.accId||'', acc_name: doc.accName||'', typ: doc.typ||'',
+      datum: doc.datum||'', betreff: doc.betreff||'',
+      zusammenfassung: doc.zusammenfassung||'', schluessel: doc.schluessel||'',
+      aktion: doc.aktion||'', uploaded_at: doc.uploadedAt||''
+    }]);
+  } catch(e) { console.warn('Doc sync error:', e); }
+}
+
+async function loadDocsFromCloud(){
+  try{
+    const data = await sbFetch('/rest/v1/documents?select=*&order=created_at.desc');
+    if(data && data.length){
+      return data.map(r => ({
+        id: r.id, filename: r.filename, filesize: r.filesize,
+        accId: r.acc_id, accName: r.acc_name, typ: r.typ,
+        datum: r.datum, betreff: r.betreff, zusammenfassung: r.zusammenfassung,
+        schluessel: r.schluessel, aktion: r.aktion, uploadedAt: r.uploaded_at
+      }));
+    }
+    return null;
+  } catch(e) { return null; }
+}
 function saveKey(v){localStorage.setItem('ap_key',v);document.getElementById('apidot').className='dot'+(v?' ok':'');}
 
 // UTILS
@@ -778,6 +874,8 @@ function addLog(){
   }
   a.log.push({id:uid(),type:document.getElementById('nl-tp').value,date:document.getElementById('nl-dt').value||td(),text:tx});
   saveData('ap_a',accounts);
+  const logAcc=accounts.find(x=>x.id===selId);
+  if(logAcc)syncOneAccount(logAcc).catch(()=>{});
   document.getElementById('nl-tx').value='';
   const lc=a.log[a.log.length-1];
   document.getElementById('d-lc').textContent=lc.date+' · '+lc.type;
@@ -1331,7 +1429,7 @@ window.LOAD = function(){seed();saveData("ap_a",accounts);renderAll();alert(acco
 // INPUT CENTER - handled above
 
 // ═══ BOOT ═══
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', async function(){
   // Load API key
   const k = localStorage.getItem('ap_key');
   if(k){
@@ -1339,21 +1437,38 @@ document.addEventListener('DOMContentLoaded', function(){
     if(el){ el.value = k; saveKey(k); }
   }
 
-  // Load from localStorage OR seed fresh
+  // Load from Supabase cloud first, fallback to localStorage, then seed
   try{
-    const saved = loadData('ap_a');
-    const ver = localStorage.getItem('ap_data_ver');
-    if(saved && saved.length >= 28 && ver === 'v8'){
-      // Use saved data with user edits
-      accounts = saved;
-    } else {
-      // Fresh seed - first time or version update
-      seed();
+    const cloudAccs = await loadAccountsFromCloud();
+    if(cloudAccs && cloudAccs.length >= 28){
+      accounts = cloudAccs;
       saveData('ap_a', accounts);
-      localStorage.setItem('ap_data_ver', 'v8');
+    } else {
+      // No cloud data - seed and push to cloud
+      const localAccs = loadData('ap_a');
+      if(localAccs && localAccs.length >= 28){
+        accounts = localAccs;
+      } else {
+        seed();
+        saveData('ap_a', accounts);
+      }
+      // Push to cloud in background
+      syncAccountsToCloud().catch(()=>{});
     }
   } catch(e){
-    try{ seed(); saveData('ap_a', accounts); } catch(e2){}
+    // Offline fallback
+    const localAccs = loadData('ap_a');
+    if(localAccs && localAccs.length >= 28){ accounts = localAccs; }
+    else { try{ seed(); saveData('ap_a',accounts); } catch(e2){} }
+  }
+  
+  // Load docs from cloud
+  try{
+    const cloudDocs = await loadDocsFromCloud();
+    if(cloudDocs && cloudDocs.length) docs = cloudDocs;
+    else { const ld = loadData('ap_d'); if(ld && ld.length) docs = ld; }
+  } catch(e){
+    const ld = loadData('ap_d'); if(ld && ld.length) docs = ld;
   }
 
   // Load docs
