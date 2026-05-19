@@ -601,8 +601,8 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
   <!-- KPI ROW -->
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;">
     <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--amber);border-radius:var(--r);padding:18px 20px;">
-      <div style="font-size:26px;font-weight:800;color:var(--amber);margin-bottom:4px;" id="kpi-total-vol">EUR 185K</div>
-      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">PIPELINE 2026 TOTAL (GI)</div>
+      <div style="font-size:26px;font-weight:800;color:var(--amber);margin-bottom:4px;" id="kpi-total-vol">EUR 535K</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">BOOKED BUSINESS PLAN 2026</div>
     </div>
     <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--green);border-radius:var(--r);padding:18px 20px;">
       <div style="font-size:26px;font-weight:800;color:var(--green);margin-bottom:4px;" id="kpi-weighted">EUR 51K</div>
@@ -716,23 +716,99 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
     </div>
   </div>
 
+  <!-- MEINE KUNDEN — BOOKED BUSINESS -->
+  <div style="background:var(--panel);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:20px;">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--green);">MEINE KUNDEN — BOOKED BUSINESS GI</div>
+      <span style="font-size:11px;color:var(--sub);margin-left:auto;">Reale Umsätze</span>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:7px 16px;background:var(--card);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);">
+      <span>KUNDE</span><span>2024 IST</span><span>2026 PLAN</span><span>2027 PLAN</span><span>GM%</span><span>PRODUKT</span>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;background:rgba(227,0,15,.03);" onclick="SA(accounts.find(a=>a.company.includes('Sennebogen Maschinentechnik'))?.id);G('accounts')">
+      <div><span style="font-size:12px;font-weight:700;color:var(--red);">🔴 Sennebogen Maschinentechnik</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">DE</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 105K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 265K</div>
+      <div style="font-size:11px;color:var(--sub);">EUR 300K</div>
+      <div style="font-size:11px;color:var(--green);">14.8%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC + Angebot EUR 797K</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">Parker Hannifin AB</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">NL</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 132K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 20K</div>
+      <div style="font-size:11px;color:var(--sub);">EUR 40K</div>
+      <div style="font-size:11px;color:var(--green);">25%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">Bibus Hydraulik AG</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">CH</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 108K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 80K</div>
+      <div style="font-size:11px;color:var(--sub);">EUR 100K</div>
+      <div style="font-size:11px;color:var(--green);">23.2%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">mtte</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">JP</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 71K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 70K</div>
+      <div style="font-size:11px;color:var(--sub);">—</div>
+      <div style="font-size:11px;color:var(--green);">34.9%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">Mecalac France S.A.S</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">FR</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 41K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 60K</div>
+      <div style="font-size:11px;color:var(--sub);">—</div>
+      <div style="font-size:11px;color:var(--green);">18.4%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">Voltrac</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">ES</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 20K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--amber);">EUR 40K</div>
+      <div style="font-size:11px;color:var(--sub);">EUR 130K</div>
+      <div style="font-size:11px;color:var(--green);">24.9%</div>
+      <div style="font-size:10px;color:var(--blue);">OBC</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:9px 16px;align-items:center;">
+      <div><span style="font-size:12px;font-weight:700;">Sandvik Mining</span><span style="font-size:10px;color:var(--dim);margin-left:6px;">SE</span></div>
+      <div style="font-size:12px;font-weight:700;color:var(--w);">EUR 4K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--dim);">EUR 0</div>
+      <div style="font-size:11px;color:var(--sub);">—</div>
+      <div style="font-size:11px;color:var(--green);">49.7%</div>
+      <div style="font-size:10px;color:var(--blue);">—</div>
+    </div>
+    <!-- TOTAL ROW -->
+    <div style="display:grid;grid-template-columns:2fr 90px 90px 90px 60px 1fr;gap:8px;padding:10px 16px;background:var(--card);border-top:2px solid var(--b);align-items:center;">
+      <div style="font-size:11px;font-weight:700;color:var(--w);">GESAMT GI</div>
+      <div style="font-size:13px;font-weight:800;color:var(--w);">EUR 481K</div>
+      <div style="font-size:13px;font-weight:800;color:var(--amber);">EUR 535K</div>
+      <div style="font-size:12px;font-weight:700;color:var(--sub);">EUR 570K</div>
+      <div style="font-size:11px;color:var(--green);"></div>
+      <div></div>
+    </div>
+  </div>
+
   <!-- FIRMA GESAMT -->
   <div style="background:var(--panel);border:1px solid var(--b);border-radius:var(--r);padding:16px 20px;">
-    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--sub);margin-bottom:12px;">FIRMA GESAMT — REFUDRIVE 2026</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--sub);margin-bottom:12px;">REFUDRIVE GESAMT 2026</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
-      <div style="text-align:center;padding:10px;">
+      <div style="text-align:center;padding:10px;background:var(--card);border-radius:7px;">
         <div style="font-size:22px;font-weight:800;color:var(--w);">EUR 15.2M</div>
         <div style="font-size:9px;color:var(--dim);margin-top:3px;">BOOKED BUSINESS</div>
       </div>
-      <div style="text-align:center;padding:10px;">
-        <div style="font-size:22px;font-weight:800;color:var(--amber);">EUR 603K</div>
-        <div style="font-size:9px;color:var(--dim);margin-top:3px;">NEW OPP. TOTAL</div>
+      <div style="text-align:center;padding:10px;background:var(--card);border-radius:7px;">
+        <div style="font-size:22px;font-weight:800;color:var(--amber);">EUR 535K</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">GI PLAN 2026</div>
       </div>
-      <div style="text-align:center;padding:10px;">
-        <div style="font-size:22px;font-weight:800;color:var(--green);">EUR 686K</div>
-        <div style="font-size:9px;color:var(--dim);margin-top:3px;">R&D PIPELINE GEWICHTET</div>
+      <div style="text-align:center;padding:10px;background:var(--card);border-radius:7px;">
+        <div style="font-size:22px;font-weight:800;color:var(--red);">EUR 797K</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">SENNEBOGEN ANGEBOT</div>
       </div>
-      <div style="text-align:center;padding:10px;">
+      <div style="text-align:center;padding:10px;background:var(--card);border-radius:7px;">
         <div style="font-size:22px;font-weight:800;color:var(--blue);">EUR 85M+</div>
         <div style="font-size:9px;color:var(--dim);margin-top:3px;">POTENZIAL 2027-2030</div>
       </div>
