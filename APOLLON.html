@@ -912,14 +912,14 @@ function addContact(){
   if(!a.contacts)a.contacts=[];
   a.contacts.push({id:uid(),name:n,title:document.getElementById('nc-t').value.trim(),role:document.getElementById('nc-r').value});
   document.getElementById('nc-n').value='';document.getElementById('nc-t').value='';
-  saveData('ap_a',accounts);renderContacts(a);
+  saveData('ap_a',accounts);syncOneAccount(a).catch(()=>{});renderContacts(a);
 }
 window.addContact=addContact;
 
 function delContact(cid){
   const a=accounts.find(x=>x.id===selId);if(!a)return;
   a.contacts=(a.contacts||[]).filter(c=>c.id!==cid);
-  saveData('ap_a',accounts);renderContacts(a);
+  saveData('ap_a',accounts);syncOneAccount(a).catch(()=>{});renderContacts(a);
 }
 window.delContact=delContact;
 
@@ -948,7 +948,7 @@ function createAcc(){
     prio:document.getElementById('na-prio').value,op:'D',phase:'Signal erkannt',
     product:'',volume:'',sop:'',nre:'',notes:'',fudate:'',futext:'',
     log:[],contacts:[],kompass:null,kompassDate:null};
-  accounts.push(a);saveData('ap_a',accounts);
+  accounts.push(a);saveData('ap_a',accounts);syncOneAccount(a).catch(()=>{});
   closeModal('modal-new-acc');RL();SA(a.id);
 }
 window.createAcc=createAcc;
@@ -1099,6 +1099,7 @@ async function genKompass(){
     a.kompass=d.content[0].text;
     a.kompassDate=td();
     saveData('ap_a',accounts);
+    syncOneAccount(a).catch(()=>{});
     renderKompass(a);
   }catch(err){
     if(el)el.innerHTML=`<span style="color:var(--red);font-size:12px;">Fehler: ${err.message}</span>`;
