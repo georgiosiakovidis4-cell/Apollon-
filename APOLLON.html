@@ -1329,6 +1329,55 @@ window.RESET = function(){resetData();};
 window.LOAD = function(){seed();saveData("ap_a",accounts);renderAll();alert(accounts.length+" Accounts geladen!");};
 
 // INPUT CENTER - handled above
+
+// ═══ BOOT ═══
+document.addEventListener('DOMContentLoaded', function(){
+  // Load API key
+  const k = localStorage.getItem('ap_key');
+  if(k){
+    const el = document.getElementById('apiKey');
+    if(el){ el.value = k; saveKey(k); }
+  }
+
+  // ALWAYS seed first - accounts are always available
+  try{ seed(); } catch(e){ console.error('Seed error:', e); }
+
+  // Merge user edits from localStorage on top
+  try{
+    const saved = loadData('ap_a');
+    if(saved && saved.length){
+      saved.forEach(s => {
+        const i = accounts.findIndex(a => a.id === s.id);
+        if(i >= 0){
+          if(Array.isArray(s.log) && s.log.length) accounts[i].log = s.log;
+          if(Array.isArray(s.contacts) && s.contacts.length) accounts[i].contacts = s.contacts;
+          if(s.phase) accounts[i].phase = s.phase;
+          if(s.fudate) accounts[i].fudate = s.fudate;
+          if(s.futext) accounts[i].futext = s.futext;
+          if(s.notes) accounts[i].notes = s.notes;
+          if(s.volume) accounts[i].volume = s.volume;
+          if(s.product) accounts[i].product = s.product;
+          if(s.kompass) accounts[i].kompass = s.kompass;
+          if(s.kompassDate) accounts[i].kompassDate = s.kompassDate;
+        }
+      });
+    }
+  } catch(e){ console.warn('Merge:', e); }
+
+  // Save merged state
+  saveData('ap_a', accounts);
+
+  // Load docs
+  try{ const d = loadData('ap_d'); if(d && d.length) docs = d; } catch(e){}
+
+  // Render everything
+  setTimeout(function(){
+    try{ RL(); } catch(e){}
+    try{ renderHome(); } catch(e){}
+    try{ populateDocAccFilter(); } catch(e){}
+    document.getElementById('nl-dt').value = td();
+  }, 50);
+});
 </script>
 </body>
 </html>
