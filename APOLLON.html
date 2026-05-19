@@ -625,18 +625,21 @@ const SB_KEY = "sb_publishable_pgWTdpBo6JmNVyMSaluI8Q_b6HjSp4g";
 
 // Supabase API helper
 async function sbFetch(path, method, body) {
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': SB_KEY,
+    'Authorization': 'Bearer ' + SB_KEY
+  };
+  if(method === 'POST') headers['Prefer'] = 'resolution=merge-duplicates';
+  if(method === 'PATCH') headers['Prefer'] = 'return=minimal';
   const res = await fetch(SB_URL + path, {
     method: method || 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SB_KEY,
-      'Authorization': 'Bearer ' + SB_KEY,
-      'Prefer': method === 'POST' ? 'resolution=merge-duplicates' : ''
-    },
+    headers,
     body: body ? JSON.stringify(body) : undefined
   });
+  if(method === 'PATCH' || method === 'DELETE') return {};
   if (!res.ok) throw new Error(await res.text());
-  return res.json();
+  try{ return await res.json(); } catch(e){ return {}; }
 }
 
 // Save/Load still use localStorage as cache
