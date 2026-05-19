@@ -269,6 +269,7 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
   <button class="tab t-accounts" id="tab-accounts" onclick="G('accounts')">☰ ACCOUNTS</button>
   <button class="tab t-pentagon" id="tab-pentagon" onclick="G('pentagon')">◆ PENTAGON</button>
   <button class="tab t-docs" id="tab-docs" onclick="G('docs')">📁 DOKUMENTE</button>
+  <button class="tab" id="tab-dashboard" onclick="G('dashboard')" style="background:rgba(240,165,0,.08);color:var(--amber);">📊 PIPELINE</button>
   <div class="sp"></div>
   <div class="ak">
     <span class="ak-l">API KEY</span>
@@ -584,6 +585,164 @@ body{font-family:"Inter","Segoe UI",Arial,sans-serif;background:var(--bg);color:
 </div>
 </div>
 
+
+<!-- PIPELINE DASHBOARD -->
+<div class="pg" id="pg-dashboard">
+<div style="overflow-y:auto;height:100%;">
+<div style="max-width:980px;margin:0 auto;padding:28px 32px;">
+
+  <!-- HEADER -->
+  <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:24px;">
+    <div style="font-size:22px;font-weight:800;">📊 PIPELINE DASHBOARD</div>
+    <div style="font-size:12px;color:var(--sub);">Georgios Iakovidis · REFUdrive GmbH · Stand: <span id="dash-date"></span></div>
+    <button class="btn s" onclick="renderDashboard()" style="margin-left:auto;">↺ Refresh</button>
+  </div>
+
+  <!-- KPI ROW -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;">
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--amber);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--amber);margin-bottom:4px;" id="kpi-total-vol">EUR 185K</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">PIPELINE 2026 TOTAL (GI)</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--green);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--green);margin-bottom:4px;" id="kpi-weighted">EUR 51K</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">GEWICHTET 2026</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--blue);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--blue);margin-bottom:4px;" id="kpi-opp-count">10</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">AKTIVE OPPORTUNITIES</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--red);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--red);margin-bottom:4px;" id="kpi-overdue">0</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">ÜBERFÄLLIGE FOLLOW-UPS</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--green);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--green);margin-bottom:4px;">60%</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">BESTE CHANCE · ETP</div>
+    </div>
+    <div style="background:var(--panel);border:1px solid var(--b);border-top:3px solid var(--amber);border-radius:var(--r);padding:18px 20px;">
+      <div style="font-size:26px;font-weight:800;color:var(--amber);margin-bottom:4px;">EUR 85M+</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:.12em;color:var(--dim);">POTENZIAL 2027-2030</div>
+    </div>
+  </div>
+
+  <!-- MY OPPORTUNITIES -->
+  <div style="background:var(--panel);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:20px;">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:10px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--amber);">MEINE OPPORTUNITIES — GI</div>
+      <span style="font-size:11px;color:var(--sub);margin-left:auto;">10 aktive Deals</span>
+    </div>
+    <div style="display:grid;grid-template-columns:2.5fr 60px 90px 90px 1fr;gap:8px;padding:7px 16px;background:var(--card);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--dim);">
+      <span>KUNDE</span><span>PROB.</span><span>2026</span><span>GEWICHTET</span><span>PRODUKT / STATUS</span>
+    </div>
+    <div id="dash-opp-list">
+      <!-- Populated by renderDashboard() -->
+    </div>
+  </div>
+
+  <!-- ePTO TARGETS -->
+  <div style="background:var(--panel);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:20px;">
+    <div style="padding:12px 16px;border-bottom:1px solid var(--b);">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--red);">ePTO TARGETS — GI ZUSTÄNDIG</div>
+    </div>
+    <div style="padding:12px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 1</div>
+        <div style="font-size:12px;font-weight:700;">Lamberet</div>
+        <div style="font-size:10px;color:var(--sub);">Trailer · FR</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 1</div>
+        <div style="font-size:12px;font-weight:700;">Tirsan</div>
+        <div style="font-size:10px;color:var(--sub);">Trailer · TR</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 1</div>
+        <div style="font-size:12px;font-weight:700;">Krone</div>
+        <div style="font-size:10px;color:var(--sub);">Trailer · DE</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--red);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 1</div>
+        <div style="font-size:12px;font-weight:700;">Chereau</div>
+        <div style="font-size:10px;color:var(--sub);">Trailer · FR</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 2</div>
+        <div style="font-size:12px;font-weight:700;">Ford Otosan</div>
+        <div style="font-size:10px;color:var(--sub);">NFZ · TR</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 2</div>
+        <div style="font-size:12px;font-weight:700;">MTTE</div>
+        <div style="font-size:10px;color:var(--sub);">JP</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--dim);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 3</div>
+        <div style="font-size:12px;font-weight:700;">Rosenbauer</div>
+        <div style="font-size:10px;color:var(--sub);">Kommunal · AT</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--b);border-left:3px solid var(--amber);padding:10px 12px;border-radius:0 7px 7px 0;">
+        <div style="font-size:9px;color:var(--dim);margin-bottom:3px;">PRIO 2</div>
+        <div style="font-size:12px;font-weight:700;">Kalmar Motors</div>
+        <div style="font-size:10px;color:var(--sub);">Port</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIEBHERR MORGEN -->
+  <div style="background:rgba(227,0,15,.04);border:1px solid rgba(227,0,15,.25);border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:16px 20px;margin-bottom:20px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--red);margin-bottom:10px;">🔴 MORGEN — LIEBHERR ÖSTERREICH</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+      <div style="background:var(--card);padding:10px 12px;border-radius:7px;">
+        <div style="font-size:9px;color:var(--dim);">ENTITÄT</div>
+        <div style="font-size:12px;font-weight:700;">Liebherr-Werk Bischofshofen</div>
+        <div style="font-size:10px;color:var(--sub);">AT · Hartmut betreut</div>
+      </div>
+      <div style="background:var(--card);padding:10px 12px;border-radius:7px;">
+        <div style="font-size:9px;color:var(--dim);">THEMA</div>
+        <div style="font-size:12px;font-weight:700;">OBC22K — Technische Klärung</div>
+        <div style="font-size:10px;color:var(--sub);">Stercom als aktueller Lieferant</div>
+      </div>
+      <div style="background:var(--card);padding:10px 12px;border-radius:7px;">
+        <div style="font-size:9px;color:var(--dim);">VOLUMEN</div>
+        <div style="font-size:12px;font-weight:700;">EUR 300K Plan 2026</div>
+        <div style="font-size:10px;color:var(--sub);">EUR 650K geplant 2028</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--sub);line-height:1.7;">
+      <strong style="color:var(--w);">Deine Rolle morgen:</strong> Beobachten. Zuhören. Verstehen wie Hartmut arbeitet. Eine gute Frage stellen.<br>
+      <strong style="color:var(--w);">Die eine Frage:</strong> "Welche Kühlmittel-Anforderungen hat Liebherr für den OBC?" — zeigt technisches Verständnis.<br>
+      <strong style="color:var(--w);">Risiko im Blick:</strong> Stercom/Felix Kohnle ist auch bei Liebherr aktiv. Gleiches Muster wie Sennebogen.
+    </div>
+  </div>
+
+  <!-- FIRMA GESAMT -->
+  <div style="background:var(--panel);border:1px solid var(--b);border-radius:var(--r);padding:16px 20px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--sub);margin-bottom:12px;">FIRMA GESAMT — REFUDRIVE 2026</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+      <div style="text-align:center;padding:10px;">
+        <div style="font-size:22px;font-weight:800;color:var(--w);">EUR 15.2M</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">BOOKED BUSINESS</div>
+      </div>
+      <div style="text-align:center;padding:10px;">
+        <div style="font-size:22px;font-weight:800;color:var(--amber);">EUR 603K</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">NEW OPP. TOTAL</div>
+      </div>
+      <div style="text-align:center;padding:10px;">
+        <div style="font-size:22px;font-weight:800;color:var(--green);">EUR 686K</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">R&D PIPELINE GEWICHTET</div>
+      </div>
+      <div style="text-align:center;padding:10px;">
+        <div style="font-size:22px;font-weight:800;color:var(--blue);">EUR 85M+</div>
+        <div style="font-size:9px;color:var(--dim);margin-top:3px;">POTENZIAL 2027-2030</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
 <!-- HIDDEN FIELDS -->
 <div style="display:none;"><textarea id="d-dos"></textarea><textarea id="d-donts"></textarea></div>
 
@@ -738,6 +897,7 @@ function G(p){
   if(tb)tb.classList.add('on');
   if(p==='accounts')RL();
   if(p==='docs'){populateDocAccFilter();renderDocs();}
+  if(p==='dashboard'){renderDashboard();}
   if(p==='home')renderHome();
 }
 window.G=G;
@@ -1370,6 +1530,54 @@ function renderHome(){
   if(elD)elD.innerHTML=docs.slice(0,4).map(d=>`<div class="hbr" onclick="G('docs')"><div class="hbd a"></div><span class="hbn">${esc(d.betreff||d.filename)}</span><span class="hbm">${d.accName||'Allgemein'}</span></div>`).join('')||'<div class="hnil">Keine Dokumente.</div>';
 }
 window.renderHome=renderHome;
+
+function renderDashboard(){
+  document.getElementById('dash-date').textContent = td();
+  const today = td();
+  
+  // Overdue from accounts
+  const od = accounts.filter(a=>a.fudate&&a.fudate<today).length;
+  document.getElementById('kpi-overdue').textContent = od;
+  
+  // My opportunities
+  const opps = [
+    {co:'Volvo CE / Eng. Solutions',country:'SWE',prob:20,vol26:50000,w26:10000,product:'OBC',status:'In process'},
+    {co:'BMC (Turkey)',country:'TU',prob:30,vol26:5000,w26:1500,product:'RPCS790-DC6k',status:'Waiting proto'},
+    {co:'EFA',country:'FR',prob:50,vol26:20000,w26:10000,product:'RPCS730 150k',status:'Offer transmitted'},
+    {co:'ETP',country:'SWE',prob:60,vol26:30000,w26:18000,product:'2x55k',status:'In process'},
+    {co:'Twin Disc',country:'US',prob:10,vol26:30000,w26:3000,product:'AFE 220',status:'In process'},
+    {co:'Iveco',country:'IT',prob:10,vol26:10000,w26:1000,product:'ePTO+DCDC',status:'In process'},
+    {co:'(Dintec) Kinell',country:'DE',prob:50,vol26:10000,w26:5000,product:'RPCS730',status:'In process'},
+    {co:'Ford Otosan',country:'TU',prob:10,vol26:10000,w26:1000,product:'mPTO',status:'In process'},
+    {co:'Parker Hannifin',country:'NL',prob:20,vol26:10000,w26:2000,product:'OBC',status:'In process'},
+    {co:'John Deere RFI',country:'US',prob:10,vol26:10000,w26:1000,product:'ePTO/DCDC',status:'Offer transmitted'}
+  ];
+  
+  const total = opps.reduce((s,o)=>s+o.vol26,0);
+  const weighted = opps.reduce((s,o)=>s+o.w26,0);
+  document.getElementById('kpi-total-vol').textContent = 'EUR '+Math.round(total/1000)+'K';
+  document.getElementById('kpi-weighted').textContent = 'EUR '+Math.round(weighted/1000)+'K';
+  document.getElementById('kpi-opp-count').textContent = opps.length;
+  
+  const el = document.getElementById('dash-opp-list');
+  if(!el)return;
+  el.innerHTML = opps.sort((a,b)=>b.prob-a.prob).map(o=>{
+    const probColor = o.prob>=50?'var(--green)':o.prob>=30?'var(--amber)':'var(--dim)';
+    const accMatch = accounts.find(a=>a.company.toLowerCase().includes(o.co.toLowerCase().split(' ')[0]));
+    return`<div style="display:grid;grid-template-columns:2.5fr 60px 90px 90px 1fr;gap:8px;padding:9px 16px;border-bottom:1px solid rgba(48,54,61,.4);align-items:center;cursor:pointer;" onclick="${accMatch?`SA('${accMatch.id}');G('accounts')`:''}">
+      <div>
+        <span style="font-size:12px;font-weight:700;">${esc(o.co)}</span>
+        <span style="font-size:10px;color:var(--dim);margin-left:6px;">${o.country}</span>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:${probColor};">${o.prob}%</div>
+      <div style="font-size:11px;color:var(--sub);">EUR ${(o.vol26/1000).toFixed(0)}K</div>
+      <div style="font-size:11px;font-weight:700;color:${probColor};">EUR ${(o.w26/1000).toFixed(0)}K</div>
+      <div style="font-size:10px;color:var(--blue);">${esc(o.product)}</div>
+    </div>`;
+  }).join('');
+}
+window.renderDashboard=renderDashboard;
+
 window.rTab=showRTab;
 
 // MAKE HELPER FUNCTION mkA available
