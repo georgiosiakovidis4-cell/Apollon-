@@ -728,6 +728,11 @@ function sv(field,val){
   if(!a)return;
   a[field]=val;
   saveData('ap_a',accounts);
+  // Force render after short delay to ensure DOM is ready
+  setTimeout(function(){
+    try{RL();}catch(e){}
+    try{renderHome();}catch(e){}
+  }, 100);
 }
 window.sv=sv;
 
